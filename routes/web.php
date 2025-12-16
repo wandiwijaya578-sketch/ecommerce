@@ -22,3 +22,7 @@ Route::get('/produk/{id}', function ($id) {
     return "Menampilkan produk dengan ID: $id";
 })->name ('detail.produk');
 
+
+Auth::routes();
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
