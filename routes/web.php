@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Auth\GoogleController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -24,5 +25,21 @@ Route::get('/produk/{id}', function ($id) {
 
 
 Auth::routes();
+
+Route::middleware(['auth', 'admin'])
+    ->prefix('admin')
+    ->name('admin.')
+    ->group(function () {
+
+        // /admin/dashboard
+        Route::get('/dashboard', [AdminController::class, 'dashboard'])
+            ->name('dashboard');
+         Route::resource('/products', AdminProductController::class);
+    });
+
+Route::controller(GoogleController::class)->group(function () {
+    Route::get('auth/google', 'redirect')->name('auth.google');
+    Route::get('auth/google/callback', 'callback');
+});
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
