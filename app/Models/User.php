@@ -2,21 +2,18 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Storage; // ← Tambahkan ini
+use App\Models\Cart;       // Opsional, tapi bagus
+use App\Models\Order;      // Opsional
+use App\Models\Product;    // Opsional
 
 class User extends Authenticatable
 {
-    /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var list<string>
-     */
     protected $fillable = [
         'name',
         'email',
@@ -28,21 +25,11 @@ class User extends Authenticatable
         'address',
     ];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var list<string>
-     */
     protected $hidden = [
         'password',
         'remember_token',
     ];
 
-    /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
     protected function casts(): array
     {
         return [
@@ -50,54 +37,67 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
-    
+
+    // Relasi
     public function cart()
     {
         return $this->hasOne(Cart::class);
     }
+
     public function orders()
     {
         return $this->hasMany(Order::class);
     }
+
     public function wishlistProducts()
     {
         return $this->belongsToMany(Product::class, 'wishlists')->withTimestamps();
     }
+
+    // Role checker
     public function isAdmin(): bool
     {
         return $this->role === 'admin';
     }
-    public function isCostomer(): bool
+
+    public function isCustomer(): bool // ← Diperbaiki typo
     {
         return $this->role === 'customer';
     }
-    public function hasInwishlist(Product $product): bool
+
+    // Cek apakah product ada di wishlist user
+    public function hasInWishlist(Product $product): bool // ← Diperbaiki nama
     {
         return $this->wishlistProducts()->where('product_id', $product->id)->exists();
-    }   
+    }
 
+    // Accessor avatar URL
     public function getAvatarUrlAttribute(): string
-{
-   if ($this->avatar && Storage::disk('public')->exists($this->avatar)) {
-        return asset('storage/' . $this->avatar);
-    }
-    if (str_starts_with($this->avatar ?? '', 'http')) {
-        return $this->avatar;
-    }
-    $hash = md5(strtolower(trim($this->email)));
-    return "https://www.gravatar.com/avatar/{$hash}?d=mp&s=200";
-}
-public function getInitialsAttribute(): string
-{
-    $words = explode(' ', $this->name);
-    $initials = '';
+    {
+        if ($this->avatar && Storage::disk('public')->exists($this->avatar)) {
+            return asset('storage/' . $this->avatar);
+        }
 
-    foreach ($words as $word) {
-        // Ambil huruf pertama tiap kata dan kapitalkan
-        $initials .= strtoupper(substr($word, 0, 1));
+        if ($this->avatar && str_starts_with($this->avatar, 'http')) {
+            return $this->avatar;
+        }
+
+        $hash = md5(strtolower(trim($this->email)));
+        return "https://www.gravatar.com/avatar/{$hash}?d=mp&s=200";
     }
 
-    // Ambil maksimal 2 huruf pertama saja
-    return substr($initials, 0, 2);
-}
-}
+    // Accessor initials (huruf depan nama)
+    public function getInitialsAttribute(): string
+    {
+        $words = explode(' ', trim($this->name));
+        $initials = '';
+
+        foreach ($words as $word) {
+            if ($word !== '') {
+                $initials .= strtoupper(substr($word, 0, 1));
+            }
+        }
+
+        return substr($initials, 0, 2);
+    }
+} // ← Jangan lupa kurung penutup class!

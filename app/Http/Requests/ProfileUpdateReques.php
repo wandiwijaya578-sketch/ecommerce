@@ -73,6 +73,12 @@ class ProfileUpdateRequest extends FormRequest
                 'max:2048',
                 'dimensions:min_width=100,min_height=100,max_width=2000,max_height=2000',
             ],
+            'public' => [
+            'driver' => 'local',
+            'root' => storage_path('app/public'),
+            'url' => env('APP_URL').'/storage',
+            'visibility' => 'public',
+        ],
         ];
     }
 

@@ -20,7 +20,7 @@
                         Temukan berbagai produk berkualitas dengan harga terbaik.
                         Gratis ongkir untuk pembelian pertama!
                     </p>
-                    <a href="" class="btn btn-light btn-lg">
+                    <a href="{{ route('catalog.index') }}" class="btn btn-light btn-lg">
                         <i class="bi bi-bag me-2"></i>Mulai Belanja
                     </a>
                 </div>
@@ -33,9 +33,9 @@
     </section>
 
     {{-- Kategori --}}
-    {{-- <section class="py-5">
+    <section class="py-5">
         <div class="container">
-            <h2 class="text-center mb-4">Kategori Populer</h2>
+            <h2 class="text-center mb-4">Kategori Lapu hias</h2>
             <div class="row g-4">
                 @foreach($categories as $category)
                     <div class="col-6 col-md-4 col-lg-2">
@@ -57,24 +57,24 @@
                 @endforeach
             </div>
         </div>
-    </section> --}}
+    </section>
 
     {{-- Produk Unggulan --}}
     <section class="py-5 bg-light">
         <div class="container">
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <h2 class="mb-0">Produk Unggulan</h2>
-                <a href="" class="btn btn-outline-primary">
+                <a href="{{ route('catalog.index') }}" class="btn btn-outline-primary">
                     Lihat Semua <i class="bi bi-arrow-right"></i>
                 </a>
             </div>
-            {{-- <div class="row g-4">
+            <div class="row g-4">
                 @foreach($featuredProducts as $product)
                     <div class="col-6 col-md-4 col-lg-3">
                         @include('partials.product-card', ['product' => $product])
                     </div>
                 @endforeach
-            </div> --}}
+            </div>
         </div>
     </section>
 
@@ -112,13 +112,13 @@
     <section class="py-5">
         <div class="container">
             <h2 class="text-center mb-4">Produk Terbaru</h2>
-            {{-- <div class="row g-4">
+            <div class="row g-4">
                 @foreach($latestProducts as $product)
                     <div class="col-6 col-md-4 col-lg-3">
                         @include('partials.product-card', ['product' => $product])
                     </div>
                 @endforeach
-            </div> --}}
+            </div>
         </div>
     </section>
 @endsection
