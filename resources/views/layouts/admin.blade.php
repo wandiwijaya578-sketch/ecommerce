@@ -30,7 +30,7 @@
         .sidebar {
             min-height: 100vh;
             width: 260px;
-            background: linear-gradient(180deg, #1e3a5f 0%, #0f172a 100%);
+            background: linear-gradient(180deg, #7b0257 0%, #a2a4ab 100%);
             position: fixed;
             top: 0;
             left: 0;
