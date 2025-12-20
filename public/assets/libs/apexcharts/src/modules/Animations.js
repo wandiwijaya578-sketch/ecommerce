@@ -83,22 +83,47 @@ export default class Animations {
   }
 
   animateLine(el, from, to, speed) {
-    el.attr(from).animate(speed).attr(to)
+    el.attr(from)
+      .animate(speed)
+      .attr(to)
   }
 
   /*
    ** Animate radius of a circle element
    */
-  animateMarker(el, speed, easing, cb) {
+  animateMarker(el, from, to, speed, easing, cb) {
+    if (!from) from = 0
+
     el.attr({
-      opacity: 0,
+      r: from,
+      width: from,
+      height: from
     })
       .animate(speed, easing)
       .attr({
-        opacity: 1,
+        r: to,
+        width: to.width,
+        height: to.height
       })
       .afterAll(() => {
         cb()
+      })
+  }
+
+  /*
+   ** Animate radius and position of a circle element
+   */
+  animateCircle(el, from, to, speed, easing) {
+    el.attr({
+      r: from.r,
+      cx: from.cx,
+      cy: from.cy
+    })
+      .animate(speed, easing)
+      .attr({
+        r: to.r,
+        cx: to.cx,
+        cy: to.cy
       })
   }
 
@@ -150,7 +175,6 @@ export default class Animations {
     this.w.globals.delayedElements.forEach((d) => {
       const ele = d.el
       ele.classList.remove('apexcharts-element-hidden')
-      ele.classList.add('apexcharts-hidden-element-shown')
     })
   }
 

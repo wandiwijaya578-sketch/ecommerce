@@ -36,7 +36,7 @@ export default class Destroy {
   }
 
   killSVG(draw) {
-    draw.each(function () {
+    draw.each(function(i, children) {
       this.removeClass('*')
       this.off()
       this.stop()
@@ -75,12 +75,11 @@ export default class Destroy {
 
     domEls.elWrap = null
     domEls.elGraphical = null
+    domEls.elAnnotations = null
     domEls.elLegendWrap = null
-    domEls.elLegendForeign = null
     domEls.baseEl = null
     domEls.elGridRect = null
     domEls.elGridRectMask = null
-    domEls.elGridRectBarMask = null
     domEls.elGridRectMarkerMask = null
     domEls.elForecastMask = null
     domEls.elNonForecastMask = null

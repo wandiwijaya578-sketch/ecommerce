@@ -5,64 +5,47 @@
 
 // colors
 $white: #fff !default;
-$gray-100: #f6f8fb !default;
-$gray-200: #ecf0f2 !default;
-$gray-300: #f1f9ff !default;  
-$gray-400: #ced4da !default;
-$gray-500: #546269 !default;
-$gray-600: #6c757d !default;
-$gray-700: #4f5467 !default;
-$gray-800: #11142d !default;
-$gray-900: #223640 !default;
+$gray-100: #F6F9FC !default;
+$gray-200: #EAEFF4 !default;
+$gray-300: #DFE5EF !default;
+$gray-400: #7C8FAC !default;
+$gray-500: #5A6A85 !default;
+$gray-600: #2A3547 !default;
 $black: #000 !default;
 
 // Color
-$blue: #1e4db7 !default;
+$blue: #5D87FF !default;
 $indigo: #6610f2 !default;
-$purple: #7460ee !default;
-$pink: #e83e8c !default;
-$red: #fc4b6c !default;
-$orange: #fb8c00 !default;
-$yellow: #fdc90f !default;
-$green: #39cb7f !default;
+$purple: #6f42c1 !default;
+$pink: #d63384 !default;
+$red: #FA896B !default;
+$orange: #fd7e14 !default;
+$yellow: #FFAE1F !default;
+$green: #13DEB9 !default;
 $teal: #20c997 !default;
-$cyan: #0bb2fb !default;
-
-$dark-transparent: rgba(0, 0, 0, 0.05);
+$cyan: #539BFF !default;
 
 // Main Colors
 $primary: $blue !default;
-$secondary: #1a97f5 !default;
+$secondary: #49BEFF !default;
 $success: $green !default;
 $info: $cyan !default;
 $warning: $yellow !default;
 $danger: $red !default;
 $light: $gray-100 !default;
-$muted: #777e89 !default;
-$dark: $gray-800 !default;
-$dark-light: $gray-800 !default;
+$muted: $gray-500 !default;
+$dark: $gray-600 !default;
+$dark-light: $gray-600 !default;
 $light-gray: $gray-100 !default;
 
-$light-indigo: #ebf3fe;
-
 // light colors
-$primary-bg-subtle: #ddebff !default;
-$secondary-bg-subtle: #1a97f51a !default;
-$success-bg-subtle: #ebfaf2 !default;
-$info-bg-subtle: #e6f4ff !default;
-$warning-bg-subtle: #fff4e5 !default;
-$danger-bg-subtle: #fdf3f5 !default;
-$light-bg-subtle: $gray-100 !default;
-$dark-bg-subtle: $gray-800 !default;
-
-$primary-text-emphasis: shade-color($primary, 60%) !default;
-$secondary-text-emphasis: shade-color($secondary, 60%) !default;
-$success-text-emphasis: shade-color($success, 60%) !default;
-$info-text-emphasis: shade-color($info, 60%) !default;
-$warning-text-emphasis: shade-color($warning, 60%) !default;
-$danger-text-emphasis: shade-color($danger, 60%) !default;
-$light-text-emphasis: $gray-100 !default;
-$dark-text-emphasis: $gray-800 !default;
+$light-primary: #ECF2FF;
+$light-secondary: #E8F7FF;
+$light-info: #EBF3FE;
+$light-success: #E6FFFA;
+$light-warning: #FEF5E5;
+$light-danger: #FBF2EF;
+$light-indigo: #EBF3FE;
 
 
 // Theme Colorss
@@ -77,8 +60,16 @@ $theme-colors: (
   "dark": $dark,
   "muted": $muted,
   "indigo": $indigo,
+  "light-primary": $light-primary,
+  "light-secondary": $light-secondary,
+  "light-info": $light-info,
+  "light-success": $light-success,
+  "light-warning": $light-warning,
+  "light-danger": $light-danger,
   "light-indigo": $light-indigo,
-) !default;
+  "dark-light": $dark-light,
+  "light-gray": $light-gray,
+  ) !default;
 
 // Spacer
 $spacer: 1rem !default;
@@ -93,7 +84,6 @@ $spacers: (
   7: 30px,
   8: 10px,
   9: 20px,
-  10: 18px,
   ) !default;
 
 // Common
@@ -116,8 +106,8 @@ $font-weight-bolder: 700 !default;
 $font-weight-base: $font-weight-normal !default;
 
 // Buttons
-$btn-padding-y: 8px !default;
-$btn-padding-x: 14px !default;
+$btn-padding-y: 7px !default;
+$btn-padding-x: 16px !default;
 $btn-font-weight: 500 !default;
 $btn-border-radius: 7px !default;
 $btn-box-shadow: unset !default;
@@ -125,8 +115,7 @@ $btn-font-size: 14 !default;
 $btn-border-radius-lg: 9px !default;
 
 // Font Family
-$font-family-sans-serif: "DM Sans", sans-serif !default;
-$font-size-base: 0.9375rem !default;
+$font-family-sans-serif: "Plus Jakarta Sans", sans-serif !default;
 
 // Font Sizes
 $font-sizes: (
@@ -136,14 +125,9 @@ $font-sizes: (
   4: 16px,
   5: 18px,
   6: 20px,
-  7: 24px,
   8: 30px,
-  9: 36px,
-  10: 40px,
-  11: 13px,
-  12: 15px,
-  14: 48px,
   ) !default;
+$font-size-base: 0.875rem !default;
 
 // Line Heght
 $line-height-base: 1.5 !default;
@@ -152,29 +136,25 @@ $line-height-lg: 2 !default;
 
 // Body
 $body-bg: $white !default;
-$body-color: #67757c !default;
+$body-color: #5A6A85 !default;
 
 // Heading
 $headings-color: $dark !default;
 $headings-font-weight: 500 !default;
 
 // Border Color
-$border-color: #ecf0f2 !default;
-
-// Box Shadow
-$box-shadow: 0px 15px 30px rgba(0, 0, 0, 0.12) !default;
-$box-shadow-sm: 0 0.125rem 0.25rem rgba($black, 0.075) !default;
-$box-shadow-lg: 0 1rem 3rem rgba($black, 0.175) !default;
-$box-shadow-inset: unset !default;
+$border-color: #ebf1f6 !default;
 
 // Card
 $card-title-color: $dark !default;
-$card-subtitle-color: $muted !default;
+$card-subtitle-color: $dark !default;
 $card-spacer-y: 30px !default;
 $card-spacer-x: 30px !default;
-$card-border-width: 1px !default;
-$card-border-color: $border-color !default;
-$card-border-radius: $btn-border-radius;
+$card-border-width: 0px !default;
+$card-border-color: #ebf1f6 !default;
+$card-border-radius: 7px;
+$card-box-shadow: rgb(145 158 171 / 20%) 0px 0px 2px 0px,
+  rgb(145 158 171 / 12%) 0px 12px 24px -4px !default;
 
 // Border Radius
 $border-radius: 7px !default;
@@ -191,7 +171,6 @@ $badge-border-radius: 4px;
 
 
 // Table
-$table-color: #777e89;
 $table-cell-padding-y: 16px !default;
 $table-cell-padding-x: 16px !default;
 $table-th-font-weight: 600 !default;
@@ -201,38 +180,38 @@ $table-border-color: $border-color !default;
 
 
 // Input
-$form-label-color: $gray-800;
+$form-label-color: $gray-600;
 $form-label-font-weight: 600;
 $form-select-indicator-padding: 38px;
 $form-select-border-radius: 7px !default;
 $form-select-box-shadow: unset !default;
-$form-select-border-color: #dfe5ef !default;
 $input-border-radius: 7px !default;
 $input-group-addon-bg: $gray-200 !default;
 $input-group-addon-border-color: $light !default;
-$input-border-color: #dfe5ef !default;
+$input-border-color: #DFE5EF !default;
 $input-bg: transparent !default;
-$input-color: $muted !default;
+$input-color: $gray-500 !default;
 $input-padding-y: 8px;
 $input-padding-x: 16px;
-$form-check-input-width: 1.313em;
-$form-check-min-height: 1.313em;
-$form-check-input-border: 1.25px solid #bdc3cd;
-$form-check-input-checked-bg-color:var(--bs-primary);
+$form-check-input-width: 1.188em;
+$form-check-min-height: 1.188em;
+$form-check-input-border: 1.25px solid #dfe5ef;
 
 // Dropdown
-$dropdown-border-radius: 7px !default;
 $dropdown-width: 360px !default;
-$dropdown-border-width: 0 !default;
+$dropdown-border-color: transparent !default;
 $dropdown-item-padding-y: 10px !default;
 $dropdown-link-hover-bg: $gray-100 !default;
 $dropdown-link-active-bg: $gray-100;
 $dropdown-link-active-color: $dark;
 $dropdown-box-shadow: rgb(145 158 171 / 20%) 0px 0px 2px 0px,
   rgb(145 158 171 / 12%) 0px 12px 24px -4px;
-$link-color: $dark !default;
-
-$link-hover-color: $primary !default;
 
 // Modal
 $modal-content-border-width: 0 !default;
+
+// navbar
+$navbar-light-color: rgba($gray-600, 1) !default;
+$navbar-light-hover-color: rgba($primary, 1) !default;
+$navbar-dark-color: rgba($gray-300, 1) !default;
+$navbar-dark-hover-color: rgba($primary, 1) !default;

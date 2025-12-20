@@ -4,38 +4,68 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-// Tambahkan model jika sudah ada, misal: use App\Models\Product;
+use App\Models\Wishlist;
+use App\Models\Product;
 
 class WishlistController extends Controller
 {
     /**
-     * Menampilkan halaman wishlist
+     * Halaman wishlist user
      */
     public function index()
     {
-        // Contoh: ambil wishlist user yang login
-        $user = Auth::user();
-        // $wishlist = $user->wishlist()->with('product')->get(); // jika pakai relasi
+        $wishlists = Wishlist::with('product.primaryImage')
+            ->where('user_id', Auth::id())
+            ->get();
 
-        return view('wishlist.index', compact('user'));
-        // atau return view('wishlist'); tergantung nama view kamu
+        return view('wishlist.index', compact('wishlists'));
     }
 
     /**
-     * Tambah produk ke wishlist (contoh)
+     * Toggle wishlist (AJAX)
+     * Tambah / Hapus dari icon ❤️
      */
-    public function store(Request $request)
+    public function toggle(Product $product)
     {
-        // Logika tambah ke wishlist
-        return redirect()->back()->with('success', 'Produk ditambahkan ke wishlist!');
+        if (!Auth::check()) {
+            return response()->json([
+                'message' => 'Unauthorized'
+            ], 401);
+        }
+
+        $wishlist = Wishlist::where('user_id', Auth::id())
+            ->where('product_id', $product->id)
+            ->first();
+
+        // JIKA SUDAH ADA → HAPUS
+        if ($wishlist) {
+            $wishlist->delete();
+
+            return response()->json([
+                'status' => 'removed'
+            ]);
+        }
+
+        // JIKA BELUM → TAMBAH
+        Wishlist::create([
+            'user_id' => Auth::id(),
+            'product_id' => $product->id,
+        ]);
+
+        return response()->json([
+            'status' => 'added'
+        ]);
     }
 
     /**
-     * Hapus dari wishlist (contoh)
+     * Hapus dari halaman wishlist
      */
     public function destroy($id)
     {
-        // Logika hapus
-        return redirect()->back()->with('success', 'Produk dihapus dari wishlist!');
+        Wishlist::where('id', $id)
+            ->where('user_id', Auth::id())
+            ->delete();
+
+        return back()->with('success', 'Produk dihapus dari wishlist');
     }
 }

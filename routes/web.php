@@ -19,6 +19,10 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('/coba', function () {
+    return view('flexy');
+});
+
 Route::get('/tentang', function () {
     return view('tentang');
 });
@@ -59,6 +63,7 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     Route::delete('/profile/avatar', [ProfileController::class, 'deleteAvatar'])->name('profile.avatar.destroy');
+
 });
 
 Route::get('/home', [HomeController::class, 'index'])->name('home');
@@ -76,8 +81,17 @@ Route::middleware('auth')->group(function () {
     Route::delete('/cart/{item}', [CartController::class, 'remove'])->name('cart.remove');
 
     // Wishlist
-    Route::get('/wishlist', [WishlistController::class, 'index'])->name('wishlist.index');
-    Route::post('/wishlist/toggle/{product}', [WishlistController::class, 'toggle'])->name('wishlist.toggle');
+    Route::post('/wishlist/{product}', [WishlistController::class, 'toggle'])
+    ->middleware('auth')
+    ->name('wishlist.toggle');
+
+Route::get('/wishlist', [WishlistController::class, 'index'])
+    ->middleware('auth')
+    ->name('wishlist.index');
+
+Route::delete('/wishlist/{id}', [WishlistController::class, 'destroy'])
+    ->middleware('auth')
+    ->name('wishlist.destroy');
 
     // Checkout
     Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');
@@ -108,5 +122,13 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/orders/{order}', [AdminOrderController::class, 'show'])->name('orders.show');
     Route::patch('/orders/{order}/status', [AdminOrderController::class, 'updateStatus'])->name('orders.updateStatus');
 });
+
+   //order
+   Route::middleware('auth')->group(function () {
+    Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
+    Route::get('/orders/{order}', [OrderController::class, 'show'])->name('orders.show');
+    Route::delete('/orders/{order}', [OrderController::class, 'destroy'])->name('orders.destroy');
+});
+
 
 Auth::routes();

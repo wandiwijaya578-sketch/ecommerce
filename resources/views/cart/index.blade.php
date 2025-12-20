@@ -39,7 +39,7 @@
                                                      width="60" height="60"
                                                      style="object-fit: cover;">
                                                 <div>
-                                                    <a href="{{ route('catalog.show', $item->product->slug) }}"
+                                                    <a href=""
                                                        class="text-decoration-none text-dark fw-medium">
                                                         {{ Str::limit($item->product->name, 40) }}
                                                     </a>
@@ -107,7 +107,7 @@
                         <a href="{{ route('checkout.index') }}" class="btn btn-primary w-100 btn-lg">
                             <i class="bi bi-credit-card me-2"></i>Checkout
                         </a>
-                        <a href="{{ route('catalog.index') }}" class="btn btn-outline-secondary w-100 mt-2">
+                        <a href="{{ route('orders.index') }}" class="btn btn-outline-secondary w-100 mt-2">
                             <i class="bi bi-arrow-left me-2"></i>Lanjut Belanja
                         </a>
                     </div>

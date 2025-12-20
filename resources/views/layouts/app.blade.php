@@ -60,7 +60,62 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
         crossorigin="anonymous"></script>
+        
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('.wishlist-btn').forEach(btn => {
+        btn.addEventListener('click', function (event) {
+            event.preventDefault();
+            event.stopPropagation();
+
+            const productId = this.dataset.id;
+
+            fetch(`/wishlist/${productId}`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': document
+                        .querySelector('meta[name="csrf-token"]').content,
+                    'Accept': 'application/json'
+                }
+            })
+            .then(res => res.json())
+            .then(data => {
+                const icon = this.querySelector('i');
+                const alertBox = document.getElementById('wishlist-alert');
+
+                if (data.status === 'added') {
+                    this.classList.remove('btn-outline-danger');
+                    this.classList.add('btn-danger');
+                    icon.className = 'bi bi-heart-fill';
+
+                    alertBox.textContent = '❤️ Produk yang diinginkan telah dimasukkan ke wishlist! jangan lupa cek nanti yaa..😘';
+                    alertBox.classList.remove('d-none');
+                } else {
+                    this.classList.add('btn-outline-danger');
+                    this.classList.remove('btn-danger');
+                    icon.className = 'bi bi-heart';
+
+                    alertBox.textContent = '💔 Produk dihapus dari wishlist';
+                    alertBox.classList.remove('d-none');
+                }
+
+                setTimeout(() => {
+                    alertBox.classList.add('d-none');
+                }, 2000);
+            });
+        });
+    });
+});
+</script>
+
 
 @stack('scripts')
+
 </body>
+<div id="wishlist-alert"
+     class="alert alert-success position-fixed top-0 end-0 m-4 d-none shadow"
+     style="z-index:99999;">
+    ❤️ Produk yang diinginkan telah dimasukkan ke wishlist! jangan lupa cek nanti yaa..😘
+</div>
+
 </html>

@@ -57,7 +57,7 @@ export default class Markers {
         class:
           alwaysDrawMarker || hasDiscreteMarkers
             ? ''
-            : 'apexcharts-series-markers',
+            : 'apexcharts-series-markers'
       })
 
       elPointsWrap.attr(
@@ -97,7 +97,7 @@ export default class Markers {
           let opts = this.getMarkerConfig({
             cssClass: PointClasses,
             seriesIndex,
-            dataPointIndex,
+            dataPointIndex
           })
 
           if (w.config.series[i].data[dataPointIndex]) {
@@ -112,19 +112,9 @@ export default class Markers {
             }
           }
 
-          if (typeof pSize !== 'undefined') {
+          if (pSize) {
             opts.pSize = pSize
           }
-
-          if (
-            p.x[q] < -w.globals.markers.largestSize ||
-            p.x[q] > w.globals.gridWidth + w.globals.markers.largestSize ||
-            p.y[q] < -w.globals.markers.largestSize ||
-            p.y[q] > w.globals.gridHeight + w.globals.markers.largestSize
-          ) {
-            opts.pSize = 0
-          }
-
           point = graphics.drawMarker(p.x[q], p.y[q], opts)
 
           point.attr('rel', dataPointIndex)
@@ -156,13 +146,11 @@ export default class Markers {
     cssClass,
     seriesIndex,
     dataPointIndex = null,
-    radius = null,
-    size = null,
-    strokeWidth = null,
+    finishRadius = null
   }) {
     const w = this.w
     let pStyle = this.getMarkerStyle(seriesIndex)
-    let pSize = size === null ? w.globals.markers.size[seriesIndex] : size
+    let pSize = w.globals.markers.size[seriesIndex]
 
     const m = w.config.markers
 
@@ -183,14 +171,13 @@ export default class Markers {
     }
 
     return {
-      pSize: radius === null ? pSize : radius,
-      pRadius: radius !== null ? radius : m.radius,
-      pointStrokeWidth:
-        strokeWidth !== null
-          ? strokeWidth
-          : Array.isArray(m.strokeWidth)
-          ? m.strokeWidth[seriesIndex]
-          : m.strokeWidth,
+      pSize: finishRadius === null ? pSize : finishRadius,
+      pRadius: m.radius,
+      width: Array.isArray(m.width) ? m.width[seriesIndex] : m.width,
+      height: Array.isArray(m.height) ? m.height[seriesIndex] : m.height,
+      pointStrokeWidth: Array.isArray(m.strokeWidth)
+        ? m.strokeWidth[seriesIndex]
+        : m.strokeWidth,
       pointStrokeColor: pStyle.pointStrokeColor,
       pointFillColor: pStyle.pointFillColor,
       shape:
@@ -206,34 +193,34 @@ export default class Markers {
       pointFillOpacity: Array.isArray(m.fillOpacity)
         ? m.fillOpacity[seriesIndex]
         : m.fillOpacity,
-      seriesIndex,
+      seriesIndex
     }
   }
 
-  addEvents(marker) {
+  addEvents(circle) {
     const w = this.w
 
     const graphics = new Graphics(this.ctx)
-    marker.node.addEventListener(
+    circle.node.addEventListener(
       'mouseenter',
-      graphics.pathMouseEnter.bind(this.ctx, marker)
+      graphics.pathMouseEnter.bind(this.ctx, circle)
     )
-    marker.node.addEventListener(
+    circle.node.addEventListener(
       'mouseleave',
-      graphics.pathMouseLeave.bind(this.ctx, marker)
+      graphics.pathMouseLeave.bind(this.ctx, circle)
     )
 
-    marker.node.addEventListener(
+    circle.node.addEventListener(
       'mousedown',
-      graphics.pathMouseDown.bind(this.ctx, marker)
+      graphics.pathMouseDown.bind(this.ctx, circle)
     )
 
-    marker.node.addEventListener('click', w.config.markers.onClick)
-    marker.node.addEventListener('dblclick', w.config.markers.onDblClick)
+    circle.node.addEventListener('click', w.config.markers.onClick)
+    circle.node.addEventListener('dblclick', w.config.markers.onDblClick)
 
-    marker.node.addEventListener(
+    circle.node.addEventListener(
       'touchstart',
-      graphics.pathMouseDown.bind(this.ctx, marker),
+      graphics.pathMouseDown.bind(this.ctx, circle),
       { passive: true }
     )
   }
@@ -252,7 +239,7 @@ export default class Markers {
 
     return {
       pointStrokeColor,
-      pointFillColor,
+      pointFillColor
     }
   }
 }

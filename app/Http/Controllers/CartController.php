@@ -11,54 +11,80 @@ use App\Models\Product;
 class CartController extends Controller
 {
     /**
-     * Tampilkan halaman keranjang belanja
+     * Halaman keranjang
      */
     public function index()
     {
         $user = Auth::user();
 
-        // Ambil cart milik user yang login
+        if (!$user) {
+            return redirect()->route('login');
+        }
+
         $cart = Cart::firstOrCreate(
-            ['user_id' => $user->id],
             ['user_id' => $user->id]
         );
 
-        // Load relasi items → product → category agar tidak N+1 query
         $cart->load('items.product.category');
 
         return view('cart.index', compact('cart'));
     }
 
     /**
-     * Tambah produk ke cart (dipanggil dari halaman produk)
+     * Tambah produk ke keranjang
      */
     public function add(Request $request)
     {
+        if (!Auth::check()) {
+            return redirect()->route('login');
+        }
+
+        // quantity OPTIONAL (default 1)
         $request->validate([
             'product_id' => 'required|exists:products,id',
-            'quantity'   => 'required|integer|min:1',
+            'quantity'   => 'nullable|integer|min:1',
         ]);
+
+        $qty = $request->quantity ?? 1;
 
         $user = Auth::user();
         $product = Product::findOrFail($request->product_id);
 
-        // Cek stock
-        if ($request->quantity > $product->stock) {
-            return back()->with('error', 'Stok tidak cukup!');
+        // Cek stok
+        if ($qty > $product->stock) {
+            return back()->with('error', 'Stok tidak cukup');
         }
 
         $cart = Cart::firstOrCreate(['user_id' => $user->id]);
 
-        $cartItem = $cart->items()->updateOrCreate(
-            ['product_id' => $product->id],
-            ['quantity' => \DB::raw('quantity + ' . $request->quantity)]
-        );
+        // Cari item dulu (JANGAN pakai updateOrCreate + DB::raw)
+        $cartItem = CartItem::where('cart_id', $cart->id)
+            ->where('product_id', $product->id)
+            ->first();
 
-        return back()->with('success', 'Produk berhasil ditambahkan ke keranjang!');
+        if ($cartItem) {
+            $newQty = $cartItem->quantity + $qty;
+
+            if ($newQty > $product->stock) {
+                return back()->with('error', 'Stok tidak cukup');
+            }
+
+            $cartItem->update([
+                'quantity' => $newQty
+            ]);
+        } else {
+            CartItem::create([
+                'cart_id'   => $cart->id,
+                'product_id'=> $product->id,
+                'quantity'  => $qty,
+            ]);
+        }
+
+        return back()->with('success', 'Produk berhasil ditambahkan ke keranjang');
     }
 
     /**
-     * Update quantity item di cart
+     * Update quantity
      */
     public function update(Request $request, $cartItemId)
     {
@@ -70,18 +96,19 @@ class CartController extends Controller
             $q->where('user_id', Auth::id());
         })->findOrFail($cartItemId);
 
-        // Cek stock
         if ($request->quantity > $cartItem->product->stock) {
-            return back()->with('error', 'Stok tidak cukup!');
+            return back()->with('error', 'Stok tidak cukup');
         }
 
-        $cartItem->update(['quantity' => $request->quantity]);
+        $cartItem->update([
+            'quantity' => $request->quantity
+        ]);
 
-        return back()->with('success', 'Keranjang berhasil diperbarui!');
+        return back()->with('success', 'Keranjang diperbarui');
     }
 
     /**
-     * Hapus item dari cart
+     * Hapus item
      */
     public function remove($cartItemId)
     {
@@ -91,6 +118,6 @@ class CartController extends Controller
 
         $cartItem->delete();
 
-        return back()->with('success', 'Produk dihapus dari keranjang!');
+        return back()->with('success', 'Produk dihapus dari keranjang');
     }
 }

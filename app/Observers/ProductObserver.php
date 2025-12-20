@@ -1,8 +1,10 @@
 <?php
+// app/Observers/ProductObserver.php
 
 namespace App\Observers;
 
 use App\Models\Product;
+use Illuminate\Support\Facades\Cache;
 
 class ProductObserver
 {
@@ -11,7 +13,15 @@ class ProductObserver
      */
     public function created(Product $product): void
     {
-        //
+        // Clear cache produk featured
+        Cache::forget('featured_products');
+        Cache::forget('category_' . $product->category_id . '_products');
+
+        // Log activity
+        activity()
+            ->performedOn($product)
+            ->causedBy(auth()->user())
+            ->log('Produk baru dibuat: ' . $product->name);
     }
 
     /**
@@ -19,7 +29,15 @@ class ProductObserver
      */
     public function updated(Product $product): void
     {
-        //
+        // Clear related caches
+        Cache::forget('product_' . $product->id);
+        Cache::forget('featured_products');
+
+        // Jika kategori berubah
+        if ($product->isDirty('category_id')) {
+            Cache::forget('category_' . $product->getOriginal('category_id') . '_products');
+            Cache::forget('category_' . $product->category_id . '_products');
+        }
     }
 
     /**
@@ -27,22 +45,9 @@ class ProductObserver
      */
     public function deleted(Product $product): void
     {
-        //
-    }
-
-    /**
-     * Handle the Product "restored" event.
-     */
-    public function restored(Product $product): void
-    {
-        //
-    }
-
-    /**
-     * Handle the Product "force deleted" event.
-     */
-    public function forceDeleted(Product $product): void
-    {
-        //
+        // Clear caches
+        Cache::forget('product_' . $product->id);
+        Cache::forget('featured_products');
+        Cache::forget('category_' . $product->category_id . '_products');
     }
 }
