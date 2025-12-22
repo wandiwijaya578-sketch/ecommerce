@@ -1,10 +1,10 @@
 <?php
-// app/Observers/ProductObserver.php
 
 namespace App\Observers;
 
 use App\Models\Product;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Auth;
 
 class ProductObserver
 {
@@ -13,15 +13,18 @@ class ProductObserver
      */
     public function created(Product $product): void
     {
-        // Clear cache produk featured
+        // Clear cache
         Cache::forget('featured_products');
         Cache::forget('category_' . $product->category_id . '_products');
 
-        // Log activity
-        activity()
-            ->performedOn($product)
-            ->causedBy(auth()->user())
-            ->log('Produk baru dibuat: ' . $product->name);
+        // OPTIONAL: log manual (AMAN tanpa package)
+        if (Auth::check()) {
+            logger()->info('Produk baru dibuat', [
+                'product_id' => $product->id,
+                'name'       => $product->name,
+                'user_id'    => Auth::id(),
+            ]);
+        }
     }
 
     /**
@@ -29,11 +32,9 @@ class ProductObserver
      */
     public function updated(Product $product): void
     {
-        // Clear related caches
         Cache::forget('product_' . $product->id);
         Cache::forget('featured_products');
 
-        // Jika kategori berubah
         if ($product->isDirty('category_id')) {
             Cache::forget('category_' . $product->getOriginal('category_id') . '_products');
             Cache::forget('category_' . $product->category_id . '_products');
@@ -45,7 +46,6 @@ class ProductObserver
      */
     public function deleted(Product $product): void
     {
-        // Clear caches
         Cache::forget('product_' . $product->id);
         Cache::forget('featured_products');
         Cache::forget('category_' . $product->category_id . '_products');

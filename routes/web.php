@@ -14,6 +14,8 @@ use App\Http\Controllers\Admin\OrderController as AdminOrderController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\GoogleController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Admin\ProductController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -51,6 +53,8 @@ Route::middleware(['auth', 'admin'])
         Route::get('/dashboard', [AdminController::class, 'dashboard'])
             ->name('dashboard');
          Route::resource('/products', AdminProductController::class);
+        Route::resource('/categories', AdminCategoryController::class);
+
     });
 
 Route::controller(GoogleController::class)->group(function () {
@@ -96,6 +100,8 @@ Route::delete('/wishlist/{id}', [WishlistController::class, 'destroy'])
     // Checkout
     Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');
     Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.store');
+    Route::get('/checkout/success', [CheckoutController::class, 'success'])->name('checkout.success');
+    
 
     // Pesanan Saya
     Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
@@ -129,6 +135,23 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/orders/{order}', [OrderController::class, 'show'])->name('orders.show');
     Route::delete('/orders/{order}', [OrderController::class, 'destroy'])->name('orders.destroy');
 });
+
+Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
+    // Kategori
+    Route::resource('categories', CategoryController::class)->except(['show']); // Kategori biasanya tidak butuh show detail page
+
+    // Produk
+    Route::resource('products', ProductController::class);
+
+    // Route tambahan untuk AJAX Image Handling (jika diperlukan)
+    // ...
+});
+
+Auth::routes();
+
+Route::get('/login', function () {
+    return view('auth.login');
+})->name('login');
 
 
 Auth::routes();
