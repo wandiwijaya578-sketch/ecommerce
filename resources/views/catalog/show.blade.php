@@ -119,7 +119,7 @@
                                 </div>
                             </div>
                             <div class="col">
-                                <button action="" type="submit" class="btn btn-success btn-lg w-100"
+                                <button type="submit" class="btn btn-primary btn-lg w-100"
                                         @if($product->stock == 0) disabled @endif>
                                     <i class="bi bi-cart-plus me-2"></i>
                                     Tambah ke Keranjang

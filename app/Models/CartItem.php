@@ -24,4 +24,17 @@ class CartItem extends Model
     {
         return $this->belongsTo(Product::class);
     }
+
+    /**
+     * Accessor untuk menghitung subtotal (harga produk × quantity)
+     */
+    public function getSubtotalAttribute()
+    {
+        // Kalau produk null atau sudah dihapus, return 0
+        if (!$this->product) {
+            return 0;
+        }
+
+        return $this->quantity * $this->product->price;
+    }
 }

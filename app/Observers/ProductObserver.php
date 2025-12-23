@@ -13,11 +13,9 @@ class ProductObserver
      */
     public function created(Product $product): void
     {
-        // Clear cache
         Cache::forget('featured_products');
         Cache::forget('category_' . $product->category_id . '_products');
 
-        // OPTIONAL: log manual (AMAN tanpa package)
         if (Auth::check()) {
             logger()->info('Produk baru dibuat', [
                 'product_id' => $product->id,

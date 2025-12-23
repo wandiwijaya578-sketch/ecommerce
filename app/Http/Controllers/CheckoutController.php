@@ -22,8 +22,9 @@ class CheckoutController extends Controller
 
         $cartItems = $user->cart->items;
 
+        // Perbaiki logika subtotal → pastikan dikalikan quantity
         $subtotal = $cartItems->sum(fn ($item) =>
-            $item->product?->price ?? 0 * $item->quantity
+            ($item->product?->price ?? 0) * $item->quantity
         );
 
         $shippingCost = 10000; // contoh ongkir
@@ -55,13 +56,14 @@ class CheckoutController extends Controller
 
         $cartItems = $user->cart->items;
 
+        // Subtotal yang benar
         $subtotal = $cartItems->sum(fn ($item) =>
-            $item->product?->price ?? 0 * $item->quantity
+            ($item->product?->price ?? 0) * $item->quantity
         );
 
         $shippingCost = 10000;
 
-        // buat order
+        // Buat order
         $order = Order::create([
             'user_id'          => $user->id,
             'order_number'     => 'ORD-' . time(),
@@ -74,18 +76,19 @@ class CheckoutController extends Controller
             'notes'            => $request->notes,
         ]);
 
-        // simpan item order
-       
+        // Simpan item order
         foreach ($cartItems as $item) {
+            if (!$item->product) continue; // skip jika produk hilang
             $order->items()->create([
-            'product_id'   => $item->product_id,
-            'product_name' => $item->product->name,
-            'price'        => $item->product->price,
-            'quantity'     => $item->quantity,
-            'subtotal'     => $item->product->price * $item->quantity, // ← tambah ini
-        ]);
-}
-        // kosongkan cart
+                'product_id'   => $item->product_id,
+                'product_name' => $item->product->name,
+                'price'        => $item->product->price,
+                'quantity'     => $item->quantity,
+                'subtotal'     => $item->product->price * $item->quantity,
+            ]);
+        }
+
+        // Kosongkan cart
         $user->cart->items()->delete();
 
         return redirect()->route('orders.index')

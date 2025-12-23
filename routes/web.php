@@ -72,9 +72,10 @@ Route::middleware('auth')->group(function () {
 
 Route::get('/home', [HomeController::class, 'index'])->name('home');
 Route::get('/catalog', [CatalogController::class, 'index'])->name('catalog.index');
+Route::get('/product/{slug}', [CatalogController::class, 'show'])->name('catalog.show');
 Route::get('/catalog/search', [CatalogController::class, 'search'])->name('catalog.search');
 Route::get('/catalog/category/{category}', [CatalogController::class, 'category'])->name('catalog.category');
-Route::get('/catalog/product/{product}', [CatalogController::class, 'show'])->name('catalog.product');
+
 
 
 Route::middleware('auth')->group(function () {

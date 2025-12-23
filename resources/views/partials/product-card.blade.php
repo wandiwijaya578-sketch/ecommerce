@@ -59,7 +59,7 @@
         </form>
 
         {{-- Tombol Detail --}}
-        <a href="{{ route('catalog.product', $product->slug) }}"
+        <a href="{{ route('catalog.show', $product->slug) }}"
            class="btn btn-outline-secondary btn-sm w-100 mt-2">
             Detail
         </a>
