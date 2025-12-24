@@ -156,3 +156,67 @@ Route::get('/login', function () {
 
 
 Auth::routes();
+
+use App\Services\MidtransService;
+use App\Models\Order;
+use App\Models\OrderItem;
+
+Route::get('/debug-midtrans', function () {
+
+    $service = new MidtransService();
+
+    // ================= BUAT ORDER SUNGGUHAN =================
+    $order = Order::create([
+        'order_number'     => 'TEST-' . time(),
+        'user_id'          => auth()->id() ?? 1, // pastikan user id ada
+        'total_amount'     => 10000,
+        'shipping_cost'    => 0,
+        'shipping_name'    => 'Test User',
+        'shipping_phone'   => '08123456789',
+        'shipping_address' => 'Jl. Test No. 123',
+        'status'           => 'pending',
+    ]);
+
+    // ================= BUAT ITEM =================
+    $order->items()->create([
+        'product_id'   => 1,
+        'product_name' => 'Produk Test',
+        'price'        => 10000,
+        'quantity'     => 1,
+        'subtotal'     => 10000,
+    ]);
+
+    // ================= SNAP TOKEN =================
+    $token = $service->createSnapToken($order);
+
+    return response()->json([
+        'status' => 'SUCCESS',
+        'token'  => $token,
+    ]);
+});
+
+
+use App\Http\Controllers\PaymentController;
+
+/*
+|--------------------------------------------------------------------------
+| MIDTRANS PAYMENT ROUTES
+|--------------------------------------------------------------------------
+*/
+Route::middleware('auth')->group(function () {
+
+    // Halaman pembayaran
+    Route::get('/orders/{order}/pay', [PaymentController::class, 'show'])
+        ->name('orders.pay');
+
+    // Ambil Snap Token (AJAX)
+    Route::post('/orders/{order}/snap-token', [PaymentController::class, 'getSnapToken'])
+        ->name('orders.snap-token');
+
+    // Redirect dari Midtrans
+    Route::get('/orders/{order}/success', [PaymentController::class, 'success'])
+        ->name('orders.success');
+
+    Route::get('/orders/{order}/pending', [PaymentController::class, 'pending'])
+        ->name('orders.pending');
+});
