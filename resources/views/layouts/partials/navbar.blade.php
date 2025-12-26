@@ -13,58 +13,36 @@
                 </a>
             </li>
         </ul>
-
         <div class="navbar-collapse justify-content-end px-0" id="navbarNav">
             <ul class="navbar-nav flex-row ms-auto align-items-center justify-content-end">
+                <a href="https://adminmart.com/product/modernize-free-bootstrap-admin-dashboard/" target="_blank"
+                    class="btn btn-primary">Download Free</a>
                 <li class="nav-item dropdown">
-                    <a class="nav-link nav-icon-hover" href="javascript:void(0)"
-                       id="drop2" data-bs-toggle="dropdown" aria-expanded="false">
-                        <img src="../assets/images/profile/user-1.jpg"
-                             alt="profile"
-                             width="35" height="35"
-                             class="rounded-circle">
+                    <a class="nav-link nav-icon-hover" href="javascript:void(0)" id="drop2" data-bs-toggle="dropdown"
+                        aria-expanded="false">
+                        <img src="{{ asset('assets/images/profile/user-1.jpg') }}" alt="" width="35" height="35" class="rounded-circle">
                     </a>
-
-                    <div class="dropdown-menu dropdown-menu-end dropdown-menu-animate-up"
-                         aria-labelledby="drop2">
+                    <div class="dropdown-menu dropdown-menu-end dropdown-menu-animate-up" aria-labelledby="drop2">
                         <div class="message-body">
-
-                            <a href="{{ route('profile.update') }}"
-                               class="d-flex align-items-center gap-2 dropdown-item">
+                            <a href="javascript:void(0)" class="d-flex align-items-center gap-2 dropdown-item">
                                 <i class="ti ti-user fs-6"></i>
                                 <p class="mb-0 fs-3">My Profile</p>
                             </a>
-
-                            <a href="javascript:void(0)"
-                               class="d-flex align-items-center gap-2 dropdown-item">
+                            <a href="javascript:void(0)" class="d-flex align-items-center gap-2 dropdown-item">
                                 <i class="ti ti-mail fs-6"></i>
                                 <p class="mb-0 fs-3">My Account</p>
                             </a>
-
-                            <a href="javascript:void(0)"
-                               class="d-flex align-items-center gap-2 dropdown-item">
+                            <a href="javascript:void(0)" class="d-flex align-items-center gap-2 dropdown-item">
                                 <i class="ti ti-list-check fs-6"></i>
                                 <p class="mb-0 fs-3">My Task</p>
                             </a>
 
-                            <hr class="my-2">
-
-                            {{-- Tombol Aksi --}}
-                            <div class="d-flex gap-2 px-3">
-                                <a href="{{ route('home') }}"
-                                   class="btn btn-outline-secondary btn-sm w-100"
-                                   target="_blank">
-                                    <i class="bi bi-shop me-1"></i> Toko Ku
-                                </a>
-
-                                <form method="POST" action="{{ route('logout') }}">
+                            <a href="{{ route('logout') }}"
+                                onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
+                                class=" btn btn-outline-primary mx-3 mt-2 d-block">Logout</a>
+                            <form method="POST" action="{{ route('logout') }}" id="logout-form" class="d-none">
                                 @csrf
-                                <button type="submit" class="btn btn-outline-danger">
-                                    <i class="bi bi-box-arrow-right me-1"></i> Logout
-                                </button>
                             </form>
-                            </div>
-
                         </div>
                     </div>
                 </li>

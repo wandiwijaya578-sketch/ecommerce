@@ -16,6 +16,8 @@ use App\Http\Controllers\Auth\GoogleController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\ProductController;
+use App\Http\Controllers\MidtransNotificationController;
+
 
 Route::get('/', function () {
     return view('welcome');
@@ -99,10 +101,11 @@ Route::delete('/wishlist/{id}', [WishlistController::class, 'destroy'])
     ->name('wishlist.destroy');
 
     // Checkout
+    Route::middleware('auth')->group(function () {
     Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');
-    Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.store');
-    Route::get('/checkout/success', [CheckoutController::class, 'success'])->name('checkout.success');
-    
+    Route::post('/checkout/pay', [CheckoutController::class, 'pay'])->name('checkout.pay');
+    Route::post('/checkout/store', [CheckoutController::class, 'store'])->name('checkout.store');
+});
 
     // Pesanan Saya
     Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
@@ -219,4 +222,8 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/orders/{order}/pending', [PaymentController::class, 'pending'])
         ->name('orders.pending');
+
+    Route::post('midtrans/notification', [MidtransNotificationController::class, 'handle'])
+        ->name('midtrans.notification');
 });
+

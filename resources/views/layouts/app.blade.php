@@ -110,6 +110,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
 @stack('scripts')
+@yield('scripts')
+
 
 </body>
 <div id="wishlist-alert"
