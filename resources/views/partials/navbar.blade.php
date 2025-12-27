@@ -105,7 +105,7 @@
                             @if(auth()->user()->isAdmin())
                                 <li><hr class="dropdown-divider"></li>
                                 <li>
-                                    <a class="dropdown-item text-primary fw-bold" href="{{ route('admin.dashboard') }}">
+                                    <a class="dropdown-item text-primary fw-bold" href="">
                                         <i class="bi bi-speedometer2 me-2"></i> Admin Panel
                                     </a>
                                 </li>

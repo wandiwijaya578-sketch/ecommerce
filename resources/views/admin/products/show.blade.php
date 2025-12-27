@@ -1,118 +1,165 @@
-@extends('layouts.admin')
-
-@section('title', 'Detail Produk')
+@extends('layouts.app')
 
 @section('content')
-<div class="row justify-content-center">
-    <div class="col-lg-12">
 
-        {{-- Header --}}
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <h2 class="h3 mb-0 fw-bold text-info">
-                <i class="bi bi-eye me-1"></i> Detail Produk
-            </h2>
-            <div class="d-flex gap-2">
-                <a href="{{ route('admin.products.edit', $product) }}" class="btn btn-warning text-white">
-                    <i class="bi bi-pencil-square me-1"></i> Edit
-                </a>
-                <a href="{{ route('admin.products.index') }}" class="btn btn-outline-secondary">
-                    <i class="bi bi-arrow-left"></i> Kembali
-                </a>
-            </div>
-        </div>
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
 
-        <div class="row g-4">
+            <div class="card shadow-sm">
 
-            {{-- ================= IMAGES ================= --}}
-            <div class="col-lg-5">
-                <div class="card shadow-sm border-0">
-                    <div class="card-body p-3">
-
-                        {{-- Primary Image --}}
-                        <img src="{{ asset('storage/'.$product->primaryImage?->image_path) }}"
-                            class="img-fluid rounded mb-3 w-100" style="object-fit:cover;max-height:320px">
-
-                        {{-- Gallery --}}
-                        <div class="row g-2">
-                            @foreach($product->images as $image)
-                            <div class="col-4">
-                                <img src="{{ asset('storage/'.$image->image_path) }}" class="img-fluid rounded border"
-                                    style="object-fit:cover;height:90px;width:100%">
-                            </div>
-                            @endforeach
+                <div class="card-header bg-white border-bottom">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div>
+                            <h1 class="h3 mb-1 fw-bold text-dark">
+                                Order #{{ $order->order_number }}
+                            </h1>
+                            <p class="text-muted mb-0">
+                                {{ $order->created_at->format('d M Y, H:i') }}
+                            </p>
                         </div>
 
+                        <span class="badge rounded-pill fs-6 px-4 py-2
+                            @switch($order->status)
+                                @case('pending')
+                                    bg-warning text-dark
+                                    @break
+                                @case('processing')
+                                    bg-primary text-white
+                                    @break
+                                @case('shipped')
+                                    bg-info text-white
+                                    @break
+                                @case('delivered')
+                                    bg-success text-white
+                                    @break
+                                @case('cancelled')
+                                    bg-danger text-white
+                                    @break
+                                @default
+                                    bg-secondary text-white
+                            @endswitch
+                        ">
+                            {{ ucfirst($order->status) }}
+                        </span>
                     </div>
                 </div>
-            </div>
 
-            {{-- ================= PRODUCT INFO ================= --}}
-            <div class="col-lg-7">
-                <div class="card shadow-sm border-0 h-100">
-                    <div class="card-body p-4">
+                <div class="card-body">
+                    <h3 class="h5 fw-semibold mb-4">Produk yang Dipesan</h3>
 
-                        <h4 class="fw-bold mb-1">
-                            {{ $product->name }}
-                        </h4>
-
-                        <p class="text-muted mb-2">
-                            <i class="bi bi-tags me-1"></i>
-                            {{ $product->category->name }}
-                        </p>
-
-                        {{-- Price --}}
-                        <h5 class="text-primary fw-bold mb-3">
-                            Rp {{ number_format($product->discount_price, 0, ',', '.') }}
-                            @if($product->discount_price)
-                            <span class="text-muted fs-6 text-decoration-line-through ms-2">
-                                Rp {{ number_format($product->price, 0, ',', '.') }}
-                            </span>
-                            @endif
-                        </h5>
-
-                        {{-- Status --}}
-                        <div class="mb-3 d-flex gap-2">
-                            <span class="badge bg-{{ $product->is_active ? 'success' : 'secondary' }}">
-                                {{ $product->is_active ? 'Aktif' : 'Nonaktif' }}
-                            </span>
-
-                            @if($product->is_featured)
-                            <span class="badge bg-warning text-dark">
-                                <i class="bi bi-star-fill me-1"></i> Unggulan
-                            </span>
-                            @endif
-                        </div>
-
-                        <hr>
-
-                        {{-- Description --}}
-                        <p class="mb-4">
-                            {{ $product->description ?: '-' }}
-                        </p>
-
-                        {{-- Meta --}}
-                        <div class="row">
-                            <div class="col-md-4 mb-2">
-                                <strong>Stok</strong>
-                                <div>{{ $product->stock }}</div>
-                            </div>
-
-                            <div class="col-md-4 mb-2">
-                                <strong>Berat</strong>
-                                <div>{{ $product->weight }} gram</div>
-                            </div>
-
-                            <div class="col-md-4 mb-2">
-                                <strong>Dibuat</strong>
-                                <div>{{ $product->created_at->format('d M Y') }}</div>
-                            </div>
-                        </div>
-
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle">
+                            <thead class="table-light">
+                                <tr>
+                                    <th class="border-0">Produk</th>
+                                    <th class="border-0 text-center">Qty</th>
+                                    <th class="border-0 text-end">Harga</th>
+                                    <th class="border-0 text-end">Subtotal</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach($order->items as $item)
+                                <tr>
+                                    <td>{{ $item->product_name }}</td>
+                                    <td class="text-center">{{ $item->quantity }}</td>
+                                    <td class="text-end">
+                                        Rp {{ number_format($item->discount_price ?? $item->price, 0, ',', '.') }}
+                                    </td>
+                                    <td class="text-end">
+                                        Rp {{ number_format($item->subtotal, 0, ',', '.') }}
+                                    </td>
+                                </tr>
+                                @endforeach
+                            </tbody>
+                            <tfoot class="border-top border-3">
+                                @if($order->shipping_cost > 0)
+                                <tr>
+                                    <td colspan="3" class="pt-3 text-end">Ongkos Kirim:</td>
+                                    <td class="pt-3 text-end">
+                                        Rp {{ number_format($order->shipping_cost, 0, ',', '.') }}
+                                    </td>
+                                </tr>
+                                @endif
+                                <tr>
+                                    <td colspan="3" class="pt-3 text-end">
+                                        <strong class="h5 mb-0">TOTAL BAYAR:</strong>
+                                    </td>
+                                    <td class="pt-3 text-end">
+                                        <strong class="h4 mb-0 text-primary">
+                                            Rp {{ number_format($order->total_amount, 0, ',', '.') }}
+                                        </strong>
+                                    </td>
+                                </tr>
+                            </tfoot>
+                        </table>
                     </div>
                 </div>
-            </div>
 
+                <div class="card-body bg-light border-top">
+                    <h3 class="h5 fw-semibold mb-3">Alamat Pengiriman</h3>
+                    <address class="mb-0">
+                        <strong>{{ $order->shipping_name }}</strong><br>
+                        {{ $order->shipping_phone }}<br>
+                        {{ $order->shipping_address }}
+                    </address>
+                </div>
+
+                @if($order->status === 'pending' && $snapToken)
+                <div class="card-body bg-primary bg-opacity-10 border-top text-center">
+                    <p class="text-muted mb-4">
+                        Selesaikan pembayaran Anda sebelum batas waktu berakhir.
+                    </p>
+                    <button id="pay-button" class="btn btn-primary btn-lg px-5 shadow-sm">
+                        <i class="bi bi-credit-card me-2"></i> Bayar Sekarang
+                    </button>
+                </div>
+                @endif
+
+            </div>
         </div>
     </div>
 </div>
+
+@if($order->snap_token)
+@push('scripts')
+<script src="{{ config('midtrans.snap_url') }}" data-client-key="{{ config('midtrans.client_key') }}"></script>
+
+<script type="text/javascript">
+    document.addEventListener('DOMContentLoaded', function () {
+        const payButton = document.getElementById('pay-button');
+
+        if (payButton) {
+            payButton.addEventListener('click', function () {
+                payButton.disabled = true;
+                payButton.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span> Memproses...';
+
+                window.snap.pay('{{ $snapToken }}', {
+                    onSuccess: function (result) {
+                        console.log('Payment Success:', result);
+                        window.location.href = '{{ route("orders.success", $order) }}';
+                    },
+                    onPending: function (result) {
+                        console.log('Payment Pending:', result);
+                        window.location.href = '{{ route("orders.pending", $order) }}';
+                    },
+                    onError: function (result) {
+                        console.log('Payment Error:', result);
+                        alert('Pembayaran gagal! Silakan coba lagi.');
+                        payButton.disabled = false;
+                        payButton.innerHTML = '<i class="bi bi-credit-card me-2"></i> Bayar Sekarang';
+                    },
+                    onClose: function () {
+                        console.log('Payment popup closed');
+                        payButton.disabled = false;
+                        payButton.innerHTML = '<i class="bi bi-credit-card me-2"></i> Bayar Sekarang';
+                    }
+                });
+            });
+        }
+    });
+</script>
+@endpush
+@endif
+
 @endsection

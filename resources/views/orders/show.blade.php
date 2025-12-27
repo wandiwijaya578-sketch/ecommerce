@@ -1,3 +1,4 @@
+
 @extends('layouts.app')
 
 @section('content')
@@ -109,8 +110,12 @@
                     </address>
                 </div>
 
+                <div class="alert alert-info">
+                    Status : {{ ($order->status) ?? 'NULL' }}.
+                </div>
+
                 {{-- Tombol Bayar (hanya jika pending) --}}
-                @if($order->status === 'pending' && $order->snap_token)
+                @if($order->status === 'pending' && $snapToken)
                 <div class="card-body bg-primary bg-opacity-10 border-top text-center">
                     <p class="text-muted mb-4">
                         Selesaikan pembayaran Anda sebelum batas waktu berakhir.
@@ -127,47 +132,45 @@
 </div>
 
 {{-- Snap.js Integration --}}
-@if($order->snap_token)
+@if($snapToken)
 @push('scripts')
-{{-- Load Snap JS dari Midtrans --}}
-<script src="{{ config('midtrans.snap_url') }}" data-client-key="{{ config('midtrans.client_key') }}"></script>
 
-<script type="text/javascript">
-    document.addEventListener('DOMContentLoaded', function () {
-        const payButton = document.getElementById('pay-button');
+<script src="https://app.sandbox.midtrans.com/snap/snap.js"
+        data-client-key="{{ config('services.midtrans.clientKey') }}"></script>
 
-        if (payButton) {
-            payButton.addEventListener('click', function () {
-                // Disable button untuk mencegah double click
-                payButton.disabled = true;
-                payButton.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span> Memproses...';
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const payButton = document.getElementById('pay-button');
 
-                window.snap.pay('{{ $order->snap_token }}', {
-                    onSuccess: function (result) {
-                        console.log('Payment Success:', result);
-                        window.location.href = '{{ route("orders.success", $order) }}';
-                    },
-                    onPending: function (result) {
-                        console.log('Payment Pending:', result);
-                        window.location.href = '{{ route("orders.pending", $order) }}';
-                    },
-                    onError: function (result) {
-                        console.log('Payment Error:', result);
-                        alert('Pembayaran gagal! Silakan coba lagi.');
-                        payButton.disabled = false;
-                        payButton.innerHTML = '<i class="bi bi-credit-card me-2"></i> Bayar Sekarang';
-                    },
-                    onClose: function () {
-                        console.log('Payment popup closed');
-                        payButton.disabled = false;
-                        payButton.innerHTML = '<i class="bi bi-credit-card me-2"></i> Bayar Sekarang';
-                    }
-                });
-            });
-        }
+    if (!payButton) return;
+
+    payButton.addEventListener('click', function () {
+        payButton.disabled = true;
+        payButton.innerHTML = 'Memproses...';
+
+        window.snap.pay('{{ $snapToken }}', {
+            onSuccess: function () {
+                window.location.href = "{{ route('orders.success', $order) }}";
+            },
+            onPending: function () {
+                window.location.href = "{{ route('orders.pending', $order) }}";
+            },
+            onError: function () {
+                alert('Pembayaran gagal');
+                payButton.disabled = false;
+                payButton.innerHTML = 'Bayar Sekarang';
+            },
+            onClose: function () {
+                payButton.disabled = false;
+                payButton.innerHTML = 'Bayar Sekarang';
+            }
+        });
     });
+});
 </script>
+
 @endpush
 @endif
+`
 
 @endsection
