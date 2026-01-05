@@ -2,10 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use App\Models\Wishlist;
 use App\Models\Product;
+use Illuminate\Support\Facades\Auth;
 
 class WishlistController extends Controller
 {
@@ -16,6 +15,7 @@ class WishlistController extends Controller
     {
         $wishlists = Wishlist::with('product.primaryImage')
             ->where('user_id', Auth::id())
+            ->latest()
             ->get();
 
         return view('wishlist.index', compact('wishlists'));
@@ -23,42 +23,32 @@ class WishlistController extends Controller
 
     /**
      * Toggle wishlist (AJAX)
-     * Tambah / Hapus dari icon ❤️
      */
-    public function toggle(Product $product)
+    public function toggle($productId)
     {
         if (!Auth::check()) {
-            return response()->json([
-                'message' => 'Unauthorized'
-            ], 401);
+            return response()->json(['message' => 'Unauthorized'], 401);
         }
 
         $wishlist = Wishlist::where('user_id', Auth::id())
-            ->where('product_id', $product->id)
+            ->where('product_id', $productId)
             ->first();
 
-        // JIKA SUDAH ADA → HAPUS
         if ($wishlist) {
             $wishlist->delete();
-
-            return response()->json([
-                'status' => 'removed'
-            ]);
+            return response()->json(['status' => 'removed']);
         }
 
-        // JIKA BELUM → TAMBAH
         Wishlist::create([
             'user_id' => Auth::id(),
-            'product_id' => $product->id,
+            'product_id' => $productId,
         ]);
 
-        return response()->json([
-            'status' => 'added'
-        ]);
+        return response()->json(['status' => 'added']);
     }
 
     /**
-     * Hapus dari halaman wishlist
+     * Hapus dari halaman wishlist (FORM)
      */
     public function destroy($id)
     {
@@ -66,6 +56,7 @@ class WishlistController extends Controller
             ->where('user_id', Auth::id())
             ->delete();
 
-        return back()->with('success', 'Produk dihapus dari wishlist');
+        return redirect()->route('wishlist.index')
+            ->with('success', 'Produk dihapus dari wishlist');
     }
 }

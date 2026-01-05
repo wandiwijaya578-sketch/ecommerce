@@ -18,12 +18,13 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\WishlistController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\MidtransNotificationController;
+use App\Http\Controllers\Admin\ReportController;
 // ================================================
 // HALAMAN PUBLIK (Tanpa Login)
 // ================================================
 
 // Homepage
-Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::get('/home', [HomeController::class, 'index'])->name('home');
 
 // Katalog Produk
 Route::get('/catalog', [CatalogController::class, 'index'])->name('catalog.index');
@@ -46,9 +47,10 @@ Route::middleware('auth')->group(function () {
     Route::post('/wishlist/toggle/{product}', [WishlistController::class, 'toggle'])->name('wishlist.toggle');
 
     // Checkout
+    Route::middleware('auth')->group(function () {
     Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');
     Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.store');
-
+});
     // Pesanan Saya
     Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
     Route::get('/orders/{order}', [OrderController::class, 'show'])->name('orders.show');
@@ -128,64 +130,104 @@ Route::controller(GoogleController::class)->group(function () {
         ->name('auth.google.callback');
 });
 
+// Batasi 5 request per menit
+Route::post('/login', [LoginController::class, 'login'])->middleware('throttle:5,1');
+
 
 Route::post('midtrans/notification', [MidtransNotificationController::class, 'handle'])
     ->name('midtrans.notification');
+// routes/web.php
+Route::post('/midtrans/callback', [\App\Http\Controllers\MidtransController::class, 'callback'])->name('midtrans.callback');
+
+
+Route::get('/orders/{order}/pay', [OrderController::class, 'pay'])->name('orders.pay');
+
+
+
+Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () {
+    Route::get('/dashboard', [\App\Http\Controllers\Admin\DashboardController::class, 'index'])
+        ->name('dashboard');
+});
+
+Route::middleware('auth')->group(function () {
+
+    Route::get('/wishlist', [WishlistController::class, 'index'])
+        ->name('wishlist.index');
+
+    Route::post('/wishlist/{product}', [WishlistController::class, 'toggle'])
+        ->name('wishlist.toggle');
+
+    Route::delete('/wishlist/{id}', [WishlistController::class, 'destroy'])
+        ->name('wishlist.destroy');
+
+});
+
+
+
+Route::get('/admin/reports/sales', 
+    [ReportController::class, 'sales']
+)->name('admin.reports.sales');
+
+Route::get('/admin/reports/sales/export', 
+    [ReportController::class, 'exportSales']
+)->name('admin.reports.sales.export');
+
+
 
 
     // routes/web.php (HAPUS SETELAH TESTING!)
 
 
-Route::get('/debug-midtrans', function () {
-    // Cek apakah config terbaca
-    $config = [
-        'merchant_id'   => config('midtrans.merchant_id'),
-        'client_key'    => config('midtrans.client_key'),
-        'server_key'    => config('midtrans.server_key') ? '***SET***' : 'NOT SET',
-        'is_production' => config('midtrans.is_production'),
-    ];
+// Route::get('/debug-midtrans', function () {
+//     // Cek apakah config terbaca
+//     $config = [
+//         'merchant_id'   => config('midtrans.merchant_id'),
+//         'client_key'    => config('midtrans.client_key'),
+//         'server_key'    => config('midtrans.server_key') ? '***SET***' : 'NOT SET',
+//         'is_production' => config('midtrans.is_production'),
+//     ];
 
-    // Test buat dummy token
-    try {
-        $service = new MidtransService();
+//     // Test buat dummy token
+//     try {
+//         $service = new MidtransService();
 
-        // Buat dummy order untuk testing
-        $dummyOrder = new \App\Models\Order();
-        $dummyOrder->order_number = 'TEST-' . time();
-        $dummyOrder->total_amount = 10000;
-        $dummyOrder->shipping_cost = 0;
-        $dummyOrder->shipping_name = 'Test User';
-        $dummyOrder->shipping_phone = '08123456789';
-        $dummyOrder->shipping_address = 'Jl. Test No. 123';
-        $dummyOrder->user = (object) [
-            'name'  => 'Tester',
-            'email' => 'test@example.com',
-            'phone' => '08123456789',
-        ];
-        // Dummy items
-        $dummyOrder->items = collect([
-            (object) [
-                'product_id'   => 1,
-                'product_name' => 'Produk Test',
-                'price'        => 10000,
-                'quantity'     => 1,
-            ],
-        ]);
+//         // Buat dummy order untuk testing
+//         $dummyOrder = new \App\Models\Order();
+//         $dummyOrder->order_number = 'TEST-' . time();
+//         $dummyOrder->total_amount = 10000;
+//         $dummyOrder->shipping_cost = 0;
+//         $dummyOrder->shipping_name = 'Test User';
+//         $dummyOrder->shipping_phone = '08123456789';
+//         $dummyOrder->shipping_address = 'Jl. Test No. 123';
+//         $dummyOrder->user = (object) [
+//             'name'  => 'Tester',
+//             'email' => 'test@example.com',
+//             'phone' => '08123456789',
+//         ];
+//         // Dummy items
+//         $dummyOrder->items = collect([
+//             (object) [
+//                 'product_id'   => 1,
+//                 'product_name' => 'Produk Test',
+//                 'price'        => 10000,
+//                 'quantity'     => 1,
+//             ],
+//         ]);
 
-        $token = $service->createSnapToken($dummyOrder);
+//         $token = $service->createSnapToken($dummyOrder);
 
-        return response()->json([
-            'status'  => 'SUCCESS',
-            'message' => 'Berhasil terhubung ke Midtrans!',
-            'config'  => $config,
-            'token'   => $token,
-        ]);
+//         return response()->json([
+//             'status'  => 'SUCCESS',
+//             'message' => 'Berhasil terhubung ke Midtrans!',
+//             'config'  => $config,
+//             'token'   => $token,
+//         ]);
 
-    } catch (\Exception $e) {
-        return response()->json([
-            'status'  => 'ERROR',
-            'message' => $e->getMessage(),
-            'config'  => $config,
-        ], 500);
-    }
-});
+//     } catch (\Exception $e) {
+//         return response()->json([
+//             'status'  => 'ERROR',
+//             'message' => $e->getMessage(),
+//             'config'  => $config,
+//         ], 500);
+//     }
+// });
