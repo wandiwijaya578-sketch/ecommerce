@@ -19,12 +19,13 @@ use App\Http\Controllers\WishlistController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\MidtransNotificationController;
 use App\Http\Controllers\Admin\ReportController;
+
 // ================================================
 // HALAMAN PUBLIK (Tanpa Login)
 // ================================================
 
 // Homepage
-Route::get('/home', [HomeController::class, 'index'])->name('home');
+Route::get('/', [HomeController::class, 'index'])->name('home');
 
 // Katalog Produk
 Route::get('/catalog', [CatalogController::class, 'index'])->name('catalog.index');
@@ -130,14 +131,17 @@ Route::controller(GoogleController::class)->group(function () {
         ->name('auth.google.callback');
 });
 
-// Batasi 5 request per menit
-Route::post('/login', [LoginController::class, 'login'])->middleware('throttle:5,1');
+// // Batasi 5 request per menit
+// Route::post('/login', [LoginController::class, 'login'])->middleware('throttle:5,1');
 
+Route::post('/midtrans/notification', [MidtransController::class, 'callback']);
+
+// routes/web.php
+Route::post('/midtrans/callback', [\App\Http\Controllers\MidtransController::class, 'callback'])->name('midtrans.callback');
 
 Route::post('midtrans/notification', [MidtransNotificationController::class, 'handle'])
     ->name('midtrans.notification');
-// routes/web.php
-Route::post('/midtrans/callback', [\App\Http\Controllers\MidtransController::class, 'callback'])->name('midtrans.callback');
+
 
 
 Route::get('/orders/{order}/pay', [OrderController::class, 'pay'])->name('orders.pay');
