@@ -1,137 +1,128 @@
-{{-- ================================================
-     FILE: resources/views/partials/navbar.blade.php
-     FUNGSI: Navigation bar untuk customer
-     ================================================ --}}
+<nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm sticky-top navbar-lux">
+    <div class="container align-items-center">
 
-<nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm sticky-top">
-    <div class="container">
-        {{-- Logo & Brand --}}
-        <a class="navbar-brand text-primary fw-bold" href="{{ route('home') }}">
-            <i class="bi bi-bag-heart-fill me-2"></i>
-            TokoOnline
+        {{-- LOGO --}}
+        <a class="navbar-brand d-flex align-items-center fw-bold" href="{{ route('home') }}">
+            <i class="bi bi-lightbulb-fill me-2 brand-icon"></i>
+            <span class="brand-text">Dwaa Lux Lighting</span>
         </a>
 
-        {{-- Mobile Toggle --}}
+        {{-- TOGGLE MOBILE --}}
         <button class="navbar-toggler" type="button"
                 data-bs-toggle="collapse"
-                data-bs-target="#navbarMain"
-                aria-controls="navbarMain" aria-expanded="false" aria-label="Toggle navigation">
+                data-bs-target="#navbarMain">
             <span class="navbar-toggler-icon"></span>
         </button>
 
-        {{-- Navbar Content --}}
         <div class="collapse navbar-collapse" id="navbarMain">
-            {{-- Search Form --}}
-            <form class="d-flex mx-auto my-3 my-lg-0" style="max-width: 500px; width: 100%;"
+
+            {{-- KATEGORI --}}
+            <ul class="navbar-nav ms-lg-4 me-3">
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle fw-medium d-flex align-items-center"
+                       href="#"
+                       data-bs-toggle="dropdown">
+                        <i class="bi bi-grid-3x3-gap me-2 category-title-icon"></i>
+                        Kategori
+                    </a>
+
+                    <ul class="dropdown-menu shadow rounded-3 category-dropdown">
+
+                        {{-- AMAN: kalau categories belum ada --}}
+                        @forelse(($categories ?? []) as $category)
+                            <li>
+                                <a class="dropdown-item d-flex align-items-center"
+                                   href="{{ route('catalog.index',['category'=>$category->slug]) }}">
+                                    <i class="bi bi-lightbulb me-2 category-icon"></i>
+                                    {{ $category->name }}
+                                </a>
+                            </li>
+                        @empty
+                            <li>
+                                <span class="dropdown-item text-muted small">
+                                    Belum ada kategori
+                                </span>
+                            </li>
+                        @endforelse
+
+                    </ul>
+                </li>
+            </ul>
+
+            {{-- SEARCH --}}
+            <form class="d-flex flex-grow-1 mx-lg-3 my-3 my-lg-0"
                   action="{{ route('catalog.index') }}" method="GET">
-                <div class="input-group">
-                    <input type="text" name="q"
-                           class="form-control border-end-0"
+                <div class="input-group search-lux">
+                    <input type="text"
+                           class="form-control"
+                           name="q"
                            placeholder="Cari produk..."
-                           value="{{ request('q') }}" aria-label="Cari produk">
-                    <button class="btn btn-outline-primary" type="submit">
+                           value="{{ request('q') }}">
+                    <button class="btn btn-search" type="submit">
                         <i class="bi bi-search"></i>
                     </button>
                 </div>
             </form>
 
-            {{-- Right Menu --}}
+            {{-- ICON MENU --}}
             <ul class="navbar-nav ms-auto align-items-center">
-                {{-- Katalog --}}
-                <li class="nav-item d-none d-lg-block">
-                    <a class="nav-link" href="{{ route('catalog.index') }}">
-                        <i class="bi bi-grid me-1"></i> Katalog
+
+                {{-- WISHLIST --}}
+                <li class="nav-item me-3">
+                    <a class="nav-link position-relative" href="{{ route('wishlist.index') }}">
+                        <i class="bi bi-heart fs-5"></i>
+                        @auth
+                            @if(auth()->user()->wishlistProducts()->count())
+                                <span class="badge badge-lux">
+                                    {{ auth()->user()->wishlistProducts()->count() }}
+                                </span>
+                            @endif
+                        @endauth
                     </a>
                 </li>
 
+                {{-- CART --}}
+                <li class="nav-item me-3">
+                    <a class="nav-link position-relative" href="{{ route('cart.index') }}">
+                        <i class="bi bi-cart3 fs-5"></i>
+                        @auth
+                            @if(auth()->user()->cart?->items()->count())
+                                <span class="badge badge-lux">
+                                    {{ auth()->user()->cart->items()->count() }}
+                                </span>
+                            @endif
+                        @endauth
+                    </a>
+                </li>
+
+                {{-- USER --}}
                 @auth
-                    {{-- Wishlist --}}
-                    <li class="nav-item position-relative">
-                        <a class="nav-link" href="{{ route('wishlist.index') }}">
-                            <i class="bi bi-heart fs-5"></i>
-                            @php
-                                $wishlistCount = auth()->user()->wishlistProducts()->count();
-                            @endphp
-                            @if($wishlistCount > 0)
-                                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
-                                      style="font-size: 0.65rem;">
-                                    {{ $wishlistCount }}
-                                    <span class="visually-hidden">item di wishlist</span>
-                                </span>
-                            @endif
-                        </a>
-                    </li>
-
-                    {{-- Cart --}}
-                    <li class="nav-item position-relative mx-3">
-                        <a class="nav-link" href="{{ route('cart.index') }}">
-                            <i class="bi bi-cart3 fs-5"></i>
-                            @php
-                                $cartCount = auth()->user()->cart?->items()->count() ?? 0;
-                            @endphp
-                            @if($cartCount > 0)
-                                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-primary"
-                                      style="font-size: 0.65rem;">
-                                    {{ $cartCount }}
-                                    <span class="visually-hidden">item di keranjang</span>
-                                </span>
-                            @endif
-                        </a>
-                    </li>
-
-                    {{-- User Dropdown --}}
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle d-flex align-items-center text-dark"
-                           href="#" id="userDropdown" role="button"
-                           data-bs-toggle="dropdown" aria-expanded="false">
-                            <img src="{{ auth()->user()->avatar_url }}"
-                                 class="rounded-circle me-2"
-                                 width="36" height="36"
-                                 alt="{{ auth()->user()->name }}"
-                                 style="object-fit: cover;">
-                            <span class="d-none d-lg-inline fw-medium">{{ auth()->user()->name }}</span>
+                        <a class="nav-link dropdown-toggle d-flex align-items-center"
+                           data-bs-toggle="dropdown">
+                            <i class="bi bi-person-circle fs-4 me-1"></i>
+                            <span class="fw-medium">{{ auth()->user()->name }}</span>
                         </a>
-                        <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="userDropdown">
-                            <li>
-                                <a class="dropdown-item" href="{{ route('profile.edit') }}">
-                                    <i class="bi bi-person me-2"></i> Profil Saya
-                                </a>
-                            </li>
-                            <li>
-                                <a class="dropdown-item" href="{{ route('orders.index') }}">
-                                    <i class="bi bi-bag me-2"></i> Pesanan Saya
-                                </a>
-                            </li>
-                            @if(auth()->user()->isAdmin())
-                                <li><hr class="dropdown-divider"></li>
-                                <li>
-                                    <a class="dropdown-item text-primary fw-bold" href="{{ route('admin.dashboard') }}">
-                                        <i class="bi bi-speedometer2 me-2"></i> Admin Panel
-                                    </a>
-                                </li>
-                            @endif
+                        <ul class="dropdown-menu dropdown-menu-end shadow rounded-3">
+                            <li><a class="dropdown-item" href="{{ route('profile.edit') }}">Profil</a></li>
+                            <li><a class="dropdown-item" href="{{ route('orders.index') }}">Pesanan</a></li>
                             <li><hr class="dropdown-divider"></li>
                             <li>
-                                <form method="POST" action="{{ route('logout') }}" class="d-inline">
+                                <form method="POST" action="{{ route('logout') }}">
                                     @csrf
-                                    <button type="submit" class="dropdown-item text-danger">
-                                        <i class="bi bi-box-arrow-right me-2"></i> Keluar
-                                    </button>
+                                    <button class="dropdown-item text-danger">Logout</button>
                                 </form>
                             </li>
                         </ul>
                     </li>
                 @else
-                    {{-- Guest Links --}}
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('login') }}">Masuk</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="btn btn-primary btn-sm px-4 ms-2" href="{{ route('register') }}">
-                            Daftar
+                        <a href="{{ route('login') }}" class="btn btn-login-lux px-4">
+                            Masuk
                         </a>
                     </li>
                 @endauth
+
             </ul>
         </div>
     </div>

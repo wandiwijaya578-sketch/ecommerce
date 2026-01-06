@@ -1,0 +1,305 @@
+
+    /* ===========================
+   DWAA LUX LIGHTING THEME
+=========================== */
+
+.navbar-lux {
+    --lux-gold: #D4AF37;
+    --lux-glow: #FFD966;
+}
+
+/* Logo */
+.brand-text {
+    color: var(--lux-gold);
+    letter-spacing: 0.5px;
+}
+
+.brand-icon {
+    color: var(--lux-gold);
+    text-shadow: 0 0 8px rgba(212,175,55,.5);
+}
+
+/* Search */
+.search-lux .form-control {
+    border-right: none;
+}
+
+.btn-search {
+    background: linear-gradient(135deg, #D4AF37, #FFD966);
+    color: #fff;
+    border: none;
+}
+
+.btn-search:hover {
+    opacity: 0.9;
+}
+
+/* Icons */
+.navbar-lux .nav-link i {
+    color: #2B2B2B;
+    transition: .3s;
+}
+
+.navbar-lux .nav-link:hover i {
+    color: var(--lux-gold);
+    text-shadow: 0 0 6px rgba(212,175,55,.6);
+}
+
+/* Badge */
+.badge-lux {
+    background: linear-gradient(135deg, #D4AF37, #FFD966);
+    color: #000;
+}
+
+/* Login button */
+.btn-login-lux {
+    background: linear-gradient(135deg, #D4AF37, #FFD966);
+    color: #000;
+    border-radius: 20px;
+    font-weight: 600;
+}
+
+.btn-login-lux:hover {
+    opacity: .9;
+}
+
+/* Dropdown */
+.dropdown-menu {
+    border-radius: 14px;
+}
+
+
+
+/* ======================
+   HOME – DWAA LUX STYLE
+====================== */
+
+:root {
+    --lux-gold: #D4AF37;
+    --lux-glow: #FFD966;
+    --lux-soft: #FFF9E6;
+}
+
+/* HERO */
+.hero-lux {
+    background: radial-gradient(circle at top right, #FFF4CC, #ffffff);
+}
+
+.hero-image {
+    filter: drop-shadow(0 0 30px rgba(212,175,55,.4));
+}
+
+/* BUTTON */
+.btn-lux {
+    background: linear-gradient(135deg, var(--lux-gold), var(--lux-glow));
+    color: #000;
+    border-radius: 30px;
+    font-weight: 600;
+}
+
+.btn-lux:hover {
+    opacity: .9;
+}
+
+/* CATEGORY */
+.category-card {
+    border-radius: 16px;
+    border: 1px solid #eee;
+    transition: .3s;
+}
+
+.category-card:hover {
+    box-shadow: 0 0 20px rgba(212,175,55,.3);
+    transform: translateY(-3px);
+}
+
+/* SOFT BG */
+.bg-soft {
+    background: var(--lux-soft);
+}
+
+/* LINK */
+.lux-link {
+    color: var(--lux-gold);
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.lux-link:hover {
+    text-decoration: underline;
+}
+
+/* PROMO */
+.promo-lux {
+    background: linear-gradient(135deg, #D4AF37, #FFD966);
+    border-radius: 20px;
+    padding: 2rem;
+    color: #000;
+}
+
+/* =========================
+   PRODUCT CARD – DWAA LUX
+========================= */
+
+.product-card-lux {
+    border-radius: 18px;
+    transition: .35s;
+    background: #fff;
+}
+
+.product-card-lux:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 0 35px rgba(212,175,55,.35);
+}
+
+/* IMAGE */
+.product-img {
+    height: 200px;
+    object-fit: cover;
+    transition: .4s;
+}
+
+.product-card-lux:hover .product-img {
+    transform: scale(1.05);
+}
+
+/* DISCOUNT */
+.badge-discount-lux {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    background: linear-gradient(135deg, #D4AF37, #FFD966);
+    color: #000;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 4px 8px;
+    border-radius: 8px;
+}
+
+/* WISHLIST */
+.wishlist-btn-lux {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: rgba(255,255,255,.9);
+    border: none;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.wishlist-btn-lux i {
+    color: #D4AF37;
+}
+
+.wishlist-btn-lux .bi-heart-fill {
+    color: #E63946;
+}
+
+/* TITLE */
+.product-title {
+    font-size: 14px;
+    line-height: 1.4;
+    margin-bottom: .5rem;
+}
+
+/* PRICE */
+.product-price {
+    font-size: 16px;
+    font-weight: 700;
+    color: #D4AF37;
+}
+
+/* BUTTON */
+.btn-lux-outline {
+    border: 1px solid #D4AF37;
+    color: #D4AF37;
+    border-radius: 20px;
+    font-weight: 600;
+}
+
+.btn-lux-outline:hover {
+    background: linear-gradient(135deg, #D4AF37, #FFD966);
+    color: #000;
+}
+
+/* =========================
+   FOOTER – DWAA LUX
+========================= */
+
+.footer-lux {
+    background: radial-gradient(circle at top, #1c1c1c, #0f0f0f);
+    color: #ccc;
+}
+
+.footer-brand {
+    color: #D4AF37;
+    font-weight: 700;
+}
+
+.footer-text {
+    color: #b5b5b5;
+}
+
+.footer-title {
+    color: #f1f1f1;
+    font-weight: 600;
+    margin-bottom: 1rem;
+}
+
+.footer-link {
+    color: #b5b5b5;
+    text-decoration: none;
+    transition: .3s;
+}
+
+.footer-link:hover {
+    color: #FFD966;
+}
+
+.footer-social {
+    color: #D4AF37;
+    font-size: 1.2rem;
+    transition: .3s;
+}
+
+.footer-social:hover {
+    color: #FFD966;
+    transform: translateY(-2px);
+}
+
+.footer-divider {
+    border-color: rgba(255,255,255,.1);
+}
+
+/* ===== CATEGORY DROPDOWN ===== */
+
+.category-dropdown {
+    min-width: 220px;
+}
+
+.category-icon {
+    color: #d4a017; /* emas lembut */
+    font-size: 15px;
+}
+
+.dropdown-item {
+    padding: 10px 14px;
+    border-radius: 8px;
+}
+
+.dropdown-item:hover {
+    background: #f8f9fa;
+}
+
+.dropdown-item:hover {
+    background: rgba(212,160,23,0.08);
+}
+
+.category-title-icon {
+    color: #d4a017;
+    font-size: 15px; /* emas lux */
+}
