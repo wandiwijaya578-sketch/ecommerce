@@ -10,10 +10,6 @@
 <div class="row g-4 mb-4">
 
    <div>
-    <a href="{{ route('admin.reports.sales.export', request()->all()) }}"
-   class="btn btn-success">
-   Export Excel
-</a>
 
    </div>
 

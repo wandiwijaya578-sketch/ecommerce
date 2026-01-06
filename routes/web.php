@@ -58,12 +58,30 @@ Route::middleware('auth')->group(function () {
     Route::get('/orders/{order}/success', [OrderController::class, 'success'])->name('orders.success');
     Route::get('/orders/{order}/pending', [OrderController::class, 'pending'])->name('orders.pending');
 
-    // Profil
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-    Route::delete('/profile/avatar', [ProfileController::class, 'deleteAvatar'])->name('profile.avatar.destroy');
-    Route::put('/profile/password', [ProfileController::class, 'updatePassword'])->name('profile.password.update');
+    // Profil User
+
+Route::middleware('auth')->group(function () {
+
+    Route::get('/profile', [ProfileController::class, 'edit'])
+        ->name('profile.edit');
+
+    Route::patch('/profile', [ProfileController::class, 'update'])
+        ->name('profile.update');
+
+    Route::patch('/profile/avatar', [ProfileController::class, 'updateAvatar'])
+        ->name('profile.avatar.update');
+
+    Route::delete('/profile/avatar', [ProfileController::class, 'deleteAvatar'])
+        ->name('profile.avatar.delete');
+
+    Route::put('/profile/password', [ProfileController::class, 'updatePassword'])
+        ->name('profile.password.update');
+
+    // 🔥 INI YANG KURANG
+    Route::delete('/profile', [ProfileController::class, 'destroy'])
+        ->name('profile.destroy');
+});
+
 
 });
 

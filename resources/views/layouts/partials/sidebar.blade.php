@@ -44,6 +44,23 @@
                 <span class="hide-menu">Categories</span>
               </a>
             </li>
+            <li class="sidebar-item">
+              <a class="sidebar-link" href="{{ route('admin.orders.index') }}" aria-expanded="false">
+                <span>
+                  <i class="ti ti-shopping-cart"></i>
+                </span>
+                <span class="hide-menu">Orders</span>
+              </a>
+            </li>
+            
+            <li class="sidebar-item">
+              <a class="sidebar-link" href="{{ route('admin.reports.sales') }}" aria-expanded="false">
+                <span>
+                  <i class="ti ti-report-money"></i>
+                </span>
+                <span class="hide-menu">Reports</span>
+              </a>
+            </li>
           </ul>
           
             
