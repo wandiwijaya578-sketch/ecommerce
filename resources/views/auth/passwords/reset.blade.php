@@ -1,63 +1,94 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">{{ __('Reset Password') }}</div>
+<div class="min-vh-100 d-flex align-items-center"
+     style="background: linear-gradient(135deg, #111827, #1f2933);">
 
-                <div class="card-body">
-                    <form method="POST" action="{{ route('password.update') }}">
-                        @csrf
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-7 col-lg-5">
 
-                        <input type="hidden" name="token" value="{{ $token }}">
+                <div class="card border-0 shadow-lg rounded-4 overflow-hidden">
 
-                        <div class="row mb-3">
-                            <label for="email" class="col-md-4 col-form-label text-md-end">{{ __('Email Address') }}</label>
+                    {{-- Header --}}
+                    <div class="text-center py-4"
+                         style="background: linear-gradient(135deg, #C9A24D, #E6C77A);">
+                        <i class="bi bi-shield-check fs-1 text-dark"></i>
+                        <h4 class="fw-bold mt-2 mb-0 text-dark">
+                            Reset Password
+                        </h4>
+                        <small class="text-dark opacity-75">
+                            Dwaa Lux Lighting
+                        </small>
+                    </div>
 
-                            <div class="col-md-6">
-                                <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ $email ?? old('email') }}" required autocomplete="email" autofocus>
+                    {{-- Body --}}
+                    <div class="card-body p-4 p-lg-5">
 
+                        <p class="text-muted text-center mb-4">
+                            Silakan buat password baru untuk akun Anda.
+                        </p>
+
+                        <form method="POST" action="{{ route('password.update') }}">
+                            @csrf
+
+                            {{-- Token --}}
+                            <input type="hidden" name="token" value="{{ $token }}">
+
+                            {{-- Email --}}
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold">Email</label>
+                                <input type="email"
+                                       name="email"
+                                       value="{{ $email ?? old('email') }}"
+                                       class="form-control form-control-lg rounded-3
+                                       @error('email') is-invalid @enderror"
+                                       placeholder="nama@email.com"
+                                       required autofocus>
                                 @error('email')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
+                                    <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>
-                        </div>
 
-                        <div class="row mb-3">
-                            <label for="password" class="col-md-4 col-form-label text-md-end">{{ __('Password') }}</label>
-
-                            <div class="col-md-6">
-                                <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="new-password">
-
+                            {{-- Password Baru --}}
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold">Password Baru</label>
+                                <input type="password"
+                                       name="password"
+                                       class="form-control form-control-lg rounded-3
+                                       @error('password') is-invalid @enderror"
+                                       placeholder="••••••••"
+                                       required>
                                 @error('password')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
+                                    <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>
-                        </div>
 
-                        <div class="row mb-3">
-                            <label for="password-confirm" class="col-md-4 col-form-label text-md-end">{{ __('Confirm Password') }}</label>
-
-                            <div class="col-md-6">
-                                <input id="password-confirm" type="password" class="form-control" name="password_confirmation" required autocomplete="new-password">
+                            {{-- Konfirmasi --}}
+                            <div class="mb-4">
+                                <label class="form-label fw-semibold">Konfirmasi Password</label>
+                                <input type="password"
+                                       name="password_confirmation"
+                                       class="form-control form-control-lg rounded-3"
+                                       placeholder="••••••••"
+                                       required>
                             </div>
-                        </div>
 
-                        <div class="row mb-0">
-                            <div class="col-md-6 offset-md-4">
-                                <button type="submit" class="btn btn-primary">
-                                    {{ __('Reset Password') }}
+                            {{-- Submit --}}
+                            <div class="d-grid">
+                                <button type="submit"
+                                        class="btn btn-lg rounded-3 fw-bold text-dark"
+                                        style="background:#C9A24D;">
+                                    <i class="bi bi-check2-circle me-1"></i>
+                                    Simpan Password Baru
                                 </button>
                             </div>
-                        </div>
-                    </form>
+
+                        </form>
+
+                    </div>
                 </div>
+
             </div>
         </div>
     </div>

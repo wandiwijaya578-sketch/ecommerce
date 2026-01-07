@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
 use Illuminate\View\View;
@@ -14,7 +13,17 @@ use Illuminate\Http\RedirectResponse;
 class ProfileController extends Controller
 {
     /**
-     * Halaman profil
+     * Halaman profil (lihat profil)
+     */
+    public function index(Request $request): View
+    {
+        $user = $request->user();
+
+        return view('profile.index', compact('user'));
+    }
+
+    /**
+     * Halaman edit profil
      */
     public function edit(Request $request): View
     {
@@ -52,7 +61,7 @@ class ProfileController extends Controller
     }
 
     /**
-     * UPDATE AVATAR (PENTING)
+     * UPDATE AVATAR
      */
     public function updateAvatar(Request $request): RedirectResponse
     {

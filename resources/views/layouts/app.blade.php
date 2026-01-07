@@ -40,6 +40,7 @@
     @stack('styles')
 </head>
 <body>
+    
 
     {{-- NAVBAR --}}
     @include('partials.navbar')

@@ -62,29 +62,20 @@ Route::middleware('auth')->group(function () {
 
 Route::middleware('auth')->group(function () {
 
-    Route::get('/profile', [ProfileController::class, 'edit'])
-        ->name('profile.edit');
+    Route::get('/profile', [ProfileController::class, 'index'])->name('profile.index');
+    Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
 
-    Route::patch('/profile', [ProfileController::class, 'update'])
-        ->name('profile.update');
+    Route::post('/profile/avatar', [ProfileController::class, 'updateAvatar'])->name('profile.updateAvatar');
+    Route::delete('/profile/avatar', [ProfileController::class, 'deleteAvatar'])->name('profile.deleteAvatar');
 
-    Route::patch('/profile/avatar', [ProfileController::class, 'updateAvatar'])
-        ->name('profile.avatar.update');
+    Route::patch('/profile/password', [ProfileController::class, 'updatePassword'])->name('profile.updatePassword');
 
-    Route::delete('/profile/avatar', [ProfileController::class, 'deleteAvatar'])
-        ->name('profile.avatar.delete');
-
-    Route::put('/profile/password', [ProfileController::class, 'updatePassword'])
-        ->name('profile.password.update');
-
-    // 🔥 INI YANG KURANG
-    Route::delete('/profile', [ProfileController::class, 'destroy'])
-        ->name('profile.destroy');
-});
-
+    Route::delete('/profile/delete', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
 });
 
+});
 // ================================================
 // HALAMAN ADMIN (Butuh Login + Role Admin)
 // ================================================

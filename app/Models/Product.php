@@ -265,6 +265,7 @@ class Product extends Model
         return $query->whereNotNull('discount_price')
                      ->whereColumn('discount_price', '<', 'price');
     }
+    
 
     public function scopeSortBy($query, ?string $sort)
     {

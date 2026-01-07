@@ -1,11 +1,17 @@
-{{-- resources/views/profile/edit.blade.php --}}
-
 @extends('layouts.app')
 
 @section('content')
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-8">
+
+            {{-- Tombol Kembali ke Halaman Profil --}}
+            <div class="mb-3">
+                <a href="{{ route('profile.index') }}" class="btn btn-outline-secondary">
+                    &larr; Kembali ke Profil
+                </a>
+            </div>
+
             <h2 class="mb-4">Profil Saya</h2>
 
             @if (session('success'))

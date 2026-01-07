@@ -1,102 +1,130 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">{{ __('Register') }}</div>
+<div class="min-vh-100 d-flex align-items-center"
+     style="background: linear-gradient(135deg, #111827, #1f2933);">
 
-                <div class="card-body">
-                    <form method="POST" action="{{ route('register') }}">
-                        @csrf
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-7 col-lg-6">
 
-                        <div class="row mb-3">
-                            <label for="name" class="col-md-4 col-form-label text-md-end">{{ __('Name') }}</label>
+                <div class="card border-0 shadow-lg rounded-4 overflow-hidden">
 
-                            <div class="col-md-6">
-                                <input id="name" type="text" class="form-control @error('name') is-invalid @enderror" name="name" value="{{ old('name') }}" required autocomplete="name" autofocus>
+                    {{-- Header --}}
+                    <div class="text-center py-4"
+                         style="background: linear-gradient(135deg, #C9A24D, #E6C77A);">
+                        <i class="bi bi-lightbulb-fill fs-1 text-dark"></i>
+                        <h4 class="fw-bold mt-2 mb-0 text-dark">
+                            Dwaa Lux Lighting
+                        </h4>
+                        <small class="text-dark opacity-75">
+                            Buat akun baru
+                        </small>
+                    </div>
 
+                    {{-- Body --}}
+                    <div class="card-body p-4 p-lg-5">
+
+                        <form method="POST" action="{{ route('register') }}">
+                            @csrf
+
+                            {{-- Nama --}}
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold">Nama Lengkap</label>
+                                <input type="text"
+                                       name="name"
+                                       value="{{ old('name') }}"
+                                       class="form-control form-control-lg rounded-3
+                                       @error('name') is-invalid @enderror"
+                                       placeholder="Nama Anda"
+                                       required autofocus>
                                 @error('name')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
+                                    <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>
-                        </div>
 
-                        <div class="row mb-3">
-                            <label for="email" class="col-md-4 col-form-label text-md-end">{{ __('Email Address') }}</label>
-
-                            <div class="col-md-6">
-                                <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email">
-
+                            {{-- Email --}}
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold">Email</label>
+                                <input type="email"
+                                       name="email"
+                                       value="{{ old('email') }}"
+                                       class="form-control form-control-lg rounded-3
+                                       @error('email') is-invalid @enderror"
+                                       placeholder="nama@email.com"
+                                       required>
                                 @error('email')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
+                                    <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>
-                        </div>
 
-                        <div class="row mb-3">
-                            <label for="password" class="col-md-4 col-form-label text-md-end">{{ __('Password') }}</label>
-
-                            <div class="col-md-6">
-                                <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="new-password">
-
+                            {{-- Password --}}
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold">Password</label>
+                                <input type="password"
+                                       name="password"
+                                       class="form-control form-control-lg rounded-3
+                                       @error('password') is-invalid @enderror"
+                                       placeholder="••••••••"
+                                       required>
                                 @error('password')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
+                                    <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>
-                        </div>
 
-                        <div class="row mb-3">
-                            <label for="password-confirm" class="col-md-4 col-form-label text-md-end">{{ __('Confirm Password') }}</label>
-
-                            <div class="col-md-6">
-                                <input id="password-confirm" type="password" class="form-control" name="password_confirmation" required autocomplete="new-password">
+                            {{-- Konfirmasi Password --}}
+                            <div class="mb-4">
+                                <label class="form-label fw-semibold">Konfirmasi Password</label>
+                                <input type="password"
+                                       name="password_confirmation"
+                                       class="form-control form-control-lg rounded-3"
+                                       placeholder="••••••••"
+                                       required>
                             </div>
-                        </div>
 
-                        <div class="row mb-0">
-                            <div class="col-md-6 offset-md-4">
-                                <button type="submit" class="btn btn-primary">
-                                    {{ __('Register') }}
+                            {{-- Register --}}
+                            <div class="d-grid mb-4">
+                                <button type="submit"
+                                        class="btn btn-lg rounded-3 fw-bold text-dark"
+                                        style="background:#C9A24D;">
+                                    <i class="bi bi-person-plus me-1"></i>
+                                    Daftar
                                 </button>
                             </div>
-                            <div class="position-relative my-4">
-                            <hr />
-                            <span
-                                class="position-absolute top-50 start-50 translate-middle bg-white px-3 text-muted"
-                            >
-                                atau daftar dengan
-                            </span>
+
+                            {{-- Divider --}}
+                            <div class="position-relative text-center mb-4">
+                                <hr>
+                                <span class="position-absolute top-50 start-50 translate-middle
+                                             bg-white px-3 text-muted">
+                                    atau daftar dengan
+                                </span>
                             </div>
 
-                            {{-- Google Sign-up Button --}}
-                            <div class="d-grid gap-2">
-                            <a href="{{ route('auth.google') }}" class="btn btn-outline-danger btn-lg">
-                                {{-- Google SVG Icon --}}
-                                <svg class="me-2" width="20" height="20" viewBox="0 0 24 24">
-                                {{-- ... SVG paths sama seperti di login ... --}}
-                                </svg>
-                                Daftar dengan Google
-                            </a>
+                            {{-- Google --}}
+                            <div class="d-grid mb-4">
+                                <a href="{{ route('auth.google') }}"
+                                   class="btn btn-outline-dark btn-lg rounded-3">
+                                    <i class="bi bi-google me-1"></i>
+                                    Daftar dengan Google
+                                </a>
                             </div>
 
-                            {{-- Teks login --}}
-                            <p class="mt-4 text-center mb-0">
-                            Sudah punya akun?
-                            <a href="{{ route('login') }}" class="text-decoration-none fw-bold">
-                                Login
-                            </a>
+                            {{-- Login --}}
+                            <p class="text-center mb-0">
+                                Sudah punya akun?
+                                <a href="{{ route('login') }}"
+                                   class="fw-bold text-decoration-none"
+                                   style="color:#C9A24D;">
+                                    Login
+                                </a>
                             </p>
-                        </div>
-                    </form>
+
+                        </form>
+
+                    </div>
                 </div>
+
             </div>
         </div>
     </div>

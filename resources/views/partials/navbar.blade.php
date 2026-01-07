@@ -97,32 +97,64 @@
 
                 {{-- USER --}}
                 @auth
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle d-flex align-items-center"
-                           data-bs-toggle="dropdown">
-                            <i class="bi bi-person-circle fs-4 me-1"></i>
-                            <span class="fw-medium">{{ auth()->user()->name }}</span>
-                        </a>
-                        <ul class="dropdown-menu dropdown-menu-end shadow rounded-3">
-                            <li><a class="dropdown-item" href="{{ route('profile.edit') }}">Profil</a></li>
-                            <li><a class="dropdown-item" href="{{ route('orders.index') }}">Pesanan</a></li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li>
-                                <form method="POST" action="{{ route('logout') }}">
-                                    @csrf
-                                    <button class="dropdown-item text-danger">Logout</button>
-                                </form>
-                            </li>
-                        </ul>
-                    </li>
-                @else
-                    <li class="nav-item">
-                        <a href="{{ route('login') }}" class="btn btn-login-lux px-4">
-                            Masuk
-                        </a>
-                    </li>
-                @endauth
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle d-flex align-items-center"
+                    data-bs-toggle="dropdown">
 
+                        {{-- FOTO PROFIL --}}
+                        @if(auth()->user()->avatar)
+                            <img src="{{ asset('storage/' . auth()->user()->avatar) }}"
+                                class="rounded-circle me-2"
+                                width="32" height="32"
+                                style="object-fit:cover">
+                        @else
+                            <div class="avatar-fallback me-2">
+                                {{ strtoupper(substr(auth()->user()->name,0,1)) }}
+                            </div>
+                        @endif
+
+                        <span class="fw-medium">{{ auth()->user()->name }}</span>
+                    </a>
+
+                    <ul class="dropdown-menu dropdown-menu-end shadow rounded-3">
+                        <li><a class="dropdown-item" href="{{ route('profile.index') }}">Profil</a></li>
+                        <li><a class="dropdown-item" href="{{ route('orders.index') }}">Pesanan</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        {{-- ADMIN PANEL (KHUSUS ADMIN) --}}
+                        @if(auth()->user()->role === 'admin')
+                        <li class="nav-item me-3">
+                            <a class="nav-link fw-semibold d-flex align-items-center text-dark"
+                            href="{{ route('admin.dashboard') }}">
+                                <i class="bi bi-speedometer2 me-2"></i>
+                                Admin Panel
+                            </a>
+                        </li>
+                        @endif
+
+                        <li>
+                            <form method="POST" action="{{ route('logout') }}">
+                                @csrf
+                                <button class="dropdown-item text-danger">Logout</button>
+                            </form>
+                        </li>
+                    </ul>
+                </li>
+
+                @else
+                {{-- GUEST (BELUM LOGIN) --}}
+                <li class="nav-item me-2">
+                    <a href="{{ route('login') }}" class="btn btn-outline-dark rounded-pill px-3">
+                        Masuk
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ route('register') }}"
+                    class="btn rounded-pill px-3 text-dark fw-semibold"
+                    style="background:#C9A24D;">
+                        Daftar
+                    </a>
+                </li>
+                @endauth
             </ul>
         </div>
     </div>

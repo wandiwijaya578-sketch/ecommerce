@@ -2,20 +2,21 @@
     Upload foto profil (JPG, PNG, WebP • max 2MB)
 </p>
 
+{{-- Form update avatar --}}
 <form method="POST"
-      action="{{ route('profile.avatar.update') }}"
+      action="{{ route('profile.updateAvatar') }}"
       enctype="multipart/form-data">
     @csrf
-    @method('PATCH')
 
-    <div class="mb-3">
+    <div class="mb-3 text-center">
         <img id="avatar-preview"
              src="{{ $user->avatar
                     ? asset('storage/'.$user->avatar)
                     : 'https://ui-avatars.com/api/?name='.urlencode($user->name) }}"
              class="rounded-circle mb-2"
              width="120"
-             height="120">
+             height="120"
+             style="object-fit: cover;">
     </div>
 
     <input type="file"
@@ -28,19 +29,20 @@
         <div class="invalid-feedback">{{ $message }}</div>
     @enderror
 
-    <button class="btn btn-primary">
+    <button type="submit" class="btn btn-primary w-100">
         Simpan Foto Profil
     </button>
 </form>
 
+{{-- Form hapus avatar --}}
 @if ($user->avatar)
 <form method="POST"
-      action="{{ route('profile.avatar.delete') }}"
+      action="{{ route('profile.deleteAvatar') }}"
       class="mt-2">
     @csrf
     @method('DELETE')
 
-    <button class="btn btn-outline-danger btn-sm">
+    <button type="submit" class="btn btn-outline-danger w-100">
         Hapus Foto Profil
     </button>
 </form>
