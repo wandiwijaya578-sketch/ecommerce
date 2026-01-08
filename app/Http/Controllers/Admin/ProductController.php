@@ -8,31 +8,26 @@ use App\Http\Requests\UpdateProductRequest;
 use App\Models\Category;
 use App\Models\Product;
 use App\Models\ProductImage;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
+use Illuminate\Http\RedirectResponse;
 
 class ProductController extends Controller
 {
-    /**
-     * 🔐 PROTEKSI ADMIN (INI YANG KAMU KURANG)
-     */
     public function __construct()
     {
         $this->middleware(['auth', 'admin']);
     }
 
-    /**
-     * Menampilkan daftar produk
-     */
     public function index(Request $request): View
     {
-        $products = Product::query()
-            ->with(['category', 'primaryImage'])
-            ->when($request->search, fn ($q, $search) => $q->search($search))
-            ->when($request->category, fn ($q, $cat) => $q->where('category_id', $cat))
+        $products = Product::with(['category', 'primaryImage'])
+            ->when($request->search, fn ($q) =>
+                $q->where('name', 'like', '%'.$request->search.'%'))
+            ->when($request->category, fn ($q) =>
+                $q->where('category_id', $request->category))
             ->latest()
             ->paginate(15)
             ->withQueryString();
@@ -61,8 +56,7 @@ class ProductController extends Controller
 
             DB::commit();
 
-            return redirect()
-                ->route('admin.products.index')
+            return redirect()->route('admin.products.index')
                 ->with('success', 'Produk berhasil ditambahkan');
 
         } catch (\Exception $e) {
@@ -73,7 +67,7 @@ class ProductController extends Controller
 
     public function show(Product $product): View
     {
-        $product->load(['category', 'images', 'orderItems']);
+        $product->load(['category', 'images']);
         return view('admin.products.show', compact('product'));
     }
 
@@ -106,8 +100,7 @@ class ProductController extends Controller
 
             DB::commit();
 
-            return redirect()
-                ->route('admin.products.index')
+            return redirect()->route('admin.products.index')
                 ->with('success', 'Produk berhasil diperbarui');
 
         } catch (\Exception $e) {
@@ -124,8 +117,7 @@ class ProductController extends Controller
 
         $product->delete();
 
-        return redirect()
-            ->route('admin.products.index')
+        return redirect()->route('admin.products.index')
             ->with('success', 'Produk berhasil dihapus');
     }
 
@@ -142,7 +134,7 @@ class ProductController extends Controller
             $product->images()->create([
                 'image_path' => $path,
                 'is_primary' => $isFirst && $index === 0,
-                'sort_order' => $product->images()->count() + $index,
+                'sort_order' => $index,
             ]);
         }
     }

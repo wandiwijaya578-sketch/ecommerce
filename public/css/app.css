@@ -303,3 +303,210 @@
     color: #d4a017;
     font-size: 15px; /* emas lux */
 }
+
+/* ukuran category */
+.category-img {
+    width: 40px;
+    height: 40px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+.category-name {
+    font-size: 14px;
+    font-weight: 600;
+    margin-left: 10px;
+}
+.category-item {
+    display: flex;
+    align-items: center;
+    padding: 8px 12px;
+    border-radius: 10px;
+    transition: .3s;
+}
+.category-item:hover {
+    background: rgba(212,160,23,0.1);
+}
+
+/* ===== WARNA UTAMA ===== */
+.text-lux {
+    color: #c9a24d;
+}
+
+.btn-lux {
+    background: linear-gradient(135deg, #c9a24d, #e6c77b);
+    color: #000;
+    border: none;
+}
+
+.btn-lux:hover {
+    opacity: .9;
+}
+
+/* ===== HERO ===== */
+.hero-lux {
+    background: #fff;
+}
+
+.hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(120deg, #ffffff 40%, #f5f5f5 100%);
+    z-index: 1;
+}
+
+.hero-image {
+    max-height: 420px;
+}
+
+.floating {
+    animation: floating 4s ease-in-out infinite;
+}
+
+@keyframes floating {
+    0%,100% { transform: translateY(0); }
+    50% { transform: translateY(-12px); }
+}
+
+/* ===== KATEGORI ===== */
+.category-circle {
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    background: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: .3s ease;
+}
+
+.category-circle:hover {
+    transform: translateY(-6px) scale(1.05);
+    box-shadow: 0 12px 30px rgba(0,0,0,.15);
+}
+
+/* ===== BACKGROUND SOFT ===== */
+.bg-soft {
+    background: #f8f9fa;
+}
+
+/* ===== PROMO ===== */
+.promo-banner {
+    background:
+        linear-gradient(rgba(0,0,0,.6), rgba(0,0,0,.6)),
+        url('/images/promo-bg.jpg') center / cover;
+}
+
+/* ===== LINK ===== */
+.lux-link {
+    color: #c9a24d;
+    text-decoration: none;
+}
+
+.lux-link:hover {
+    text-decoration: underline;
+}
+
+/* ===== MEDIA QUERIES ===== */
+/* Extra small devices (phones, 600px and down) */
+@media only screen and (max-width: 600px) {
+    .hero-image {
+        max-height: 300px;
+    }
+}
+
+/* Small devices (portrait tablets and large phones, 600px and up) */
+@media only screen and (min-width: 600px) {
+    .hero-image {
+        max-height: 400px;
+    }
+}
+
+/* Medium devices (landscape tablets, 768px and up) */
+@media only screen and (min-width: 768px) {
+    .hero-image {
+        max-height: 500px;
+    }
+}
+
+/* Large devices (laptops/desktops, 992px and up) */
+@media only screen and (min-width: 992px) {
+    .hero-image {
+        max-height: 600px;
+    }
+}
+
+/* Extra large devices (large laptops and desktops, 1200px and up) */
+@media only screen and (min-width: 1200px) {
+    .hero-image {
+        max-height: 700px;
+    }
+}
+
+/* =========================
+   CHECKOUT – DWAA LUX
+========================= */
+
+.card-lux {
+    border-radius: 18px;
+    border: 1px solid #f1f1f1;
+    background: #fff;
+}
+
+.form-control-lux {
+    border-radius: 14px;
+    padding: 12px 14px;
+    border: 1px solid #ddd;
+    transition: .3s;
+}
+
+.form-control-lux:focus {
+    border-color: #D4AF37;
+    box-shadow: 0 0 0 3px rgba(212,175,55,.15);
+}
+
+.order-items {
+    max-height: 260px;
+    overflow-y: auto;
+    padding-right: 6px;
+}
+
+/* Scrollbar halus */
+.order-items::-webkit-scrollbar {
+    width: 4px;
+}
+.order-items::-webkit-scrollbar-thumb {
+    background: #D4AF37;
+    border-radius: 10px;
+}
+
+/* Button checkout */
+.btn-lux {
+    background: linear-gradient(135deg, #D4AF37, #FFD966);
+    color: #000;
+    font-weight: 600;
+    border-radius: 30px;
+}
+
+.btn-lux:hover {
+    opacity: .9;
+}
+
+/* Icon color */
+.text-lux {
+    color: #D4AF37;
+}
+
+/* Google Maps icon di textarea */
+.map-icon {
+    position: absolute;
+    right: 14px;
+    top: 14px;
+    color: #D4AF37;
+    font-size: 18px;
+    pointer-events: none;
+}
+
+/* ===========================
+   END OF DWAA LUX LIGHTING THEME
+=========================== */
+

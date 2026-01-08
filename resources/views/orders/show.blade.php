@@ -1,98 +1,151 @@
-
 @extends('layouts.app')
 
 @section('content')
 
+<style>
+    :root {
+        --lux-gold: #C9A24D;
+        --lux-dark: #111111;
+        --lux-soft: #F7F7F7;
+    }
+
+    .lux-card {
+        background: #fff;
+        border-radius: 18px;
+    }
+
+    .lux-header {
+        background: linear-gradient(135deg, #111111, #1c1c1c);
+        color: #fff;
+    }
+
+    .lux-badge {
+        background: var(--lux-gold);
+        color: #111;
+        font-weight: 600;
+    }
+
+    .lux-title i {
+        color: var(--lux-gold);
+    }
+
+    .lux-total {
+        background: linear-gradient(135deg, #fffaf0, #ffffff);
+        border: 1px solid #f0e6cc;
+        border-radius: 14px;
+        padding: 16px 20px;
+    }
+
+    .btn-lux {
+        background: linear-gradient(135deg, #C9A24D, #E6C77B);
+        border: none;
+        color: #111;
+        font-weight: 600;
+    }
+
+    .btn-lux:hover {
+        background: linear-gradient(135deg, #B8913D, #D9B968);
+        color: #111;
+    }
+
+    .step {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: #555;
+    }
+
+    .step.active {
+        background: var(--lux-gold);
+    }
+</style>
+
 <div class="container py-5">
     <div class="row justify-content-center">
-        <div class="col-lg-8">
+        <div class="col-xl-8 col-lg-9">
 
-            <div class="card shadow-sm">
+            <div class="card lux-card border-0 shadow-lg overflow-hidden">
 
-                {{-- Header Order --}}
-                <div class="card-header bg-white border-bottom">
-                    <div class="d-flex justify-content-between align-items-start">
+                {{-- HEADER --}}
+                <div class="lux-header px-4 py-4">
+                    <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
                         <div>
-                            <h1 class="h3 mb-1 fw-bold text-dark">
-                                Order #{{ $order->order_number }}
+                            <h1 class="h4 fw-bold mb-1">
+                                Toko Dwaa Lux
                             </h1>
-                            <p class="text-muted mb-0">
-                                {{ $order->created_at->format('d M Y, H:i') }}
-                            </p>
+                            <small class="opacity-75">
+                                Order #{{ $order->order_number }} •
+                                {{ $order->created_at->format('d M Y • H:i') }}
+                            </small>
                         </div>
 
-                        {{-- Status Badge --}}
-                        <span class="badge rounded-pill fs-6 px-4 py-2
-                            @switch($order->status)
-                                @case('pending')
-                                    bg-warning text-dark
-                                    @break
-                                @case('processing')
-                                    bg-primary text-white
-                                    @break
-                                @case('shipped')
-                                    bg-info text-white
-                                    @break
-                                @case('delivered')
-                                    bg-success text-white
-                                    @break
-                                @case('cancelled')
-                                    bg-danger text-white
-                                    @break
-                                @default
-                                    bg-secondary text-white
-                            @endswitch
-                        ">
+                        <span class="badge lux-badge px-4 py-2 rounded-pill">
                             {{ ucfirst($order->status) }}
                         </span>
                     </div>
+
+                    {{-- PROGRESS --}}
+                    <div class="d-flex align-items-center gap-2 mt-3">
+                        <div class="step {{ in_array($order->status,['pending','processing','shipped','delivered']) ? 'active' : '' }}"></div>
+                        <div class="step {{ in_array($order->status,['processing','shipped','delivered']) ? 'active' : '' }}"></div>
+                        <div class="step {{ in_array($order->status,['shipped','delivered']) ? 'active' : '' }}"></div>
+                        <div class="step {{ $order->status === 'delivered' ? 'active' : '' }}"></div>
+                        <small class="ms-2 opacity-75">Status Pesanan</small>
+                    </div>
                 </div>
 
-                {{-- Detail Items --}}
-                <div class="card-body">
-                    <h3 class="h5 fw-semibold mb-4">Produk yang Dipesan</h3>
+                {{-- PRODUK --}}
+                <div class="card-body px-4 pt-4">
+                    <h5 class="fw-semibold mb-4 lux-title">
+                        <i class="bi bi-gem me-2"></i>
+                        Detail Produk
+                    </h5>
 
                     <div class="table-responsive">
-                        <table class="table table-hover align-middle">
-                            <thead class="table-light">
+                        <table class="table table-borderless align-middle">
+                            <thead class="text-muted border-bottom">
                                 <tr>
-                                    <th class="border-0">Produk</th>
-                                    <th class="border-0 text-center">Qty</th>
-                                    <th class="border-0 text-end">Harga</th>
-                                    <th class="border-0 text-end">Subtotal</th>
+                                    <th>Produk</th>
+                                    <th class="text-center">Qty</th>
+                                    <th class="text-end">Harga</th>
+                                    <th class="text-end">Subtotal</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach($order->items as $item)
-                                <tr>
-                                    <td>{{ $item->product_name }}</td>
+                                <tr class="border-bottom">
+                                    <td class="fw-medium">{{ $item->product_name }}</td>
                                     <td class="text-center">{{ $item->quantity }}</td>
                                     <td class="text-end">
                                         Rp {{ number_format($item->discount_price ?? $item->price, 0, ',', '.') }}
                                     </td>
-                                    <td class="text-end">
+                                    <td class="text-end fw-semibold">
                                         Rp {{ number_format($item->subtotal, 0, ',', '.') }}
                                     </td>
                                 </tr>
                                 @endforeach
                             </tbody>
-                            <tfoot class="border-top border-3">
+                            <tfoot>
                                 @if($order->shipping_cost > 0)
                                 <tr>
-                                    <td colspan="3" class="pt-3 text-end">Ongkos Kirim:</td>
-                                    <td class="pt-3 text-end">
+                                    <td colspan="3" class="text-end pt-3 text-muted">
+                                        Ongkos Kirim
+                                    </td>
+                                    <td class="text-end pt-3">
                                         Rp {{ number_format($order->shipping_cost, 0, ',', '.') }}
                                     </td>
                                 </tr>
                                 @endif
                                 <tr>
-                                    <td colspan="3" class="pt-3 text-end">
-                                        <strong class="h5 mb-0">TOTAL BAYAR:</strong>
-                                    </td>
-                                    <td class="pt-3 text-end">
-                                        <strong class="h4 mb-0 text-primary">
-                                            Rp {{ number_format($order->total_amount, 0, ',', '.') }}
-                                        </strong>
+                                    <td colspan="4" class="pt-4">
+                                        <div class="d-flex justify-content-between align-items-center lux-total">
+                                            <span class="fw-semibold fs-5">
+                                                TOTAL PEMBAYARAN
+                                            </span>
+                                            <span class="fs-4 fw-bold text-dark">
+                                                Rp {{ number_format($order->total_amount, 0, ',', '.') }}
+                                            </span>
+                                        </div>
                                     </td>
                                 </tr>
                             </tfoot>
@@ -100,77 +153,71 @@
                     </div>
                 </div>
 
-                {{-- Alamat Pengiriman --}}
-                <div class="card-body bg-light border-top">
-                    <h3 class="h5 fw-semibold mb-3">Alamat Pengiriman</h3>
-                    <address class="mb-0">
-                        <strong>{{ $order->shipping_name }}</strong><br>
+                {{-- ALAMAT --}}
+                <div class="card-body bg-light px-4 border-top">
+                    <h5 class="fw-semibold mb-3 lux-title">
+                        <i class="bi bi-geo-alt-fill me-2"></i>
+                        Alamat Pengiriman
+                    </h5>
+                    <address class="mb-0 text-muted">
+                        <strong class="text-dark">{{ $order->shipping_name }}</strong><br>
                         {{ $order->shipping_phone }}<br>
                         {{ $order->shipping_address }}
                     </address>
                 </div>
 
-                <div class="alert alert-info">
-                    Status : {{ ($order->status) ?? 'NULL' }}.
-                </div>
-
-                {{-- Tombol Bayar (hanya jika pending) --}}
+                {{-- BAYAR --}}
                 @if($order->status === 'pending' && $snapToken)
-                <div class="card-body bg-primary bg-opacity-10 border-top text-center">
+                <div class="card-body text-center border-top py-4">
                     <p class="text-muted mb-4">
-                        Selesaikan pembayaran Anda sebelum batas waktu berakhir.
+                        Selesaikan pembayaran untuk melanjutkan pesanan Anda.
                     </p>
-                    <button id="pay-button" class="btn btn-primary btn-lg px-5 shadow-sm">
-                        <i class="bi bi-credit-card me-2"></i> Bayar Sekarang
+                    <button id="pay-button"
+                        class="btn btn-lux btn-lg px-5 rounded-pill shadow-lg">
+                        <i class="bi bi-credit-card me-2"></i>
+                        Bayar Sekarang
                     </button>
                 </div>
                 @endif
 
             </div>
+
         </div>
     </div>
 </div>
 
-{{-- Snap.js Integration --}}
+{{-- MIDTRANS --}}
 @if($snapToken)
 @push('scripts')
-
 <script src="https://app.sandbox.midtrans.com/snap/snap.js"
         data-client-key="{{ config('services.midtrans.clientKey') }}"></script>
 
 <script>
 document.addEventListener('DOMContentLoaded', function () {
-    const payButton = document.getElementById('pay-button');
+    const btn = document.getElementById('pay-button');
+    if (!btn) return;
 
-    if (!payButton) return;
+    btn.addEventListener('click', function () {
+        btn.disabled = true;
+        btn.innerHTML =
+            '<span class="spinner-border spinner-border-sm me-2"></span>Memproses...';
 
-    payButton.addEventListener('click', function () {
-        payButton.disabled = true;
-        payButton.innerHTML = 'Memproses...';
-
-        window.snap.pay('{{ $snapToken }}', {
-            onSuccess: function () {
-                window.location.href = "{{ route('orders.success', $order) }}";
-            },
-            onPending: function () {
-                window.location.href = "{{ route('orders.pending', $order) }}";
-            },
-            onError: function () {
+        snap.pay('{{ $snapToken }}', {
+            onSuccess: () => window.location.href = "{{ route('orders.success', $order) }}",
+            onPending: () => window.location.href = "{{ route('orders.pending', $order) }}",
+            onError: () => {
                 alert('Pembayaran gagal');
-                payButton.disabled = false;
-                payButton.innerHTML = 'Bayar Sekarang';
+                btn.disabled = false;
+                btn.innerHTML = 'Bayar Sekarang';
             },
-            onClose: function () {
-                payButton.disabled = false;
-                payButton.innerHTML = 'Bayar Sekarang';
+            onClose: () => {
+                btn.disabled = false;
+                btn.innerHTML = 'Bayar Sekarang';
             }
         });
     });
 });
 </script>
-
 @endpush
 @endif
-`
-
 @endsection
